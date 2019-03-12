@@ -3,7 +3,7 @@
 <head>
     <title>模拟必应搜索框</title>
     <!-- 浏览器兼容性：以最新的IE引擎解析文档 -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8">
     <style type="text/css">
         body {
             background-color: #333;
@@ -53,8 +53,8 @@
         .search-box {
             /* 绝对定位：当前这个元素相对与body左上角的位置 */
             position: absolute;
-            top: 200px;
-            left: 300px;
+            top: 150px;
+            left: 200px;
         }
 
         /* 智能提示框的样式 */
@@ -92,19 +92,19 @@
 </head>
 
 <body>
+    <!-- 搜索框区域 -->
     <div class="bg-div">
         <div class="search-box">
             <div class="logo"> </div>
-            <form class="search-form" action="https://cn.bing.com/search" target="_blank" id="search-form">
+            <form class="search-form" action="http://cn.bing.com/search" target="_blank" id="search-form">
                 <input type="text" class="search-text" name="q" id="search_input" autocomplete="off" />
                 <input type="submit" class="search-button" value="" />
             </form>
         </div>
     </div>
-    <!-- 模拟自动提示的内容 -->
-    <!-- <div class="suggest" id="search-suggest" style="position: absolute;top: 100px;left: 100px;"> -->
+    <!-- 下拉智能提示框区域：模拟自动提示的内容 -->
     <div class="suggest" id="search-suggest" style="display: none;">
-        <ul>
+        <ul id="search-result">
             <li>模拟搜索结果1</li>
             <li>模拟搜索结果2</li>
         </ul>
@@ -114,11 +114,62 @@
     <script>
         // 元素search_input绑定键盘输入事件
         $('#search_input').bind('keyup', function () {
-            $('#search-suggest').show().css({
-                top: $('#search-form').offset().top + $('#search-form').height(), //$('#search-form').offset().top：获取元素search-form距离浏览器上方的位置
-                left: $('#search-form').offset().left, //获取元素search-form距离浏览器左边的位置
-                position: 'absolute'
-            });
+            var searchText = $('#search_input').val();
+            //走Ajax的GET请求访问必应提供的URL地址，带上我自己的参数值；返回格式为json
+            //注意：正常Ajax请求必须在同域下完成，也就是说URL最前面必须是api.bing.com，但这里只是自己写的本地HTML文件。
+            //所以必须用fiddler将该本地HTML文件的URL前缀映射成api.bing.com，以便达到同域的效果
+            $.get('http://api.bing.com/qsonhs.aspx?q=' + searchText, function (data) {
+                var data = data.AS.Results[0].Suggests; //data.AS.Results[0].Suggests：是按必应回调的结果格式，取出自己需要的值
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                    html += '<li>' + data[i].Txt + '</li>';
+                }
+                $('#search-result').html(html);
+                // 服务器回调成功后展示元素search-suggest
+                $('#search-suggest').css({
+                    top: $('#search-form').offset().top + $('#search-form').height() + 10, //$('#search-form').offset().top：获取元素search-form距离浏览器上方的位置
+                    left: $('#search-form').offset().left, //获取元素search-form距离浏览器左边的位置
+                    position: 'absolute'
+                }).show();
+            }, 'json');
+
+            //如果觉得用fiddler映射本地文件到api.bing.com麻烦的话，也可以直接用下面Ajax跨域请求直接运行
+            // $.ajax({
+            //     type: 'get',
+            //     url: 'https://api.bing.com/qsonhs.aspx?type=cb&q=' + searchText,
+            //     async: true,
+            //     dataType: "jsonp",
+            //     jsonp: 'cb',
+            //     success: function (data) {
+            //         var data = data.AS.Results[0].Suggests; //data.AS.Results[0].Suggests：是按必应回调的结果格式，取出自己需要的值
+            //         var html = '';
+            //         for (var i = 0; i < data.length; i++) {
+            //             html += '<li>' + data[i].Txt + '</li>';
+            //         }
+            //         $('#search-result').html(html);
+            //         // 服务器回调成功后展示元素search-suggest
+            //         $('#search-suggest').css({
+            //             top: $('#search-form').offset().top + $('#search-form').height(), //$('#search-form').offset().top：获取元素search-form距离浏览器上方的位置
+            //             left: $('#search-form').offset().left, //获取元素search-form距离浏览器左边的位置
+            //             position: 'absolute'
+            //         }).show();
+            //     }
+            // });
+
+        });
+
+        //当点击页面任意位置时，提示框消失
+        $(document).bind('click', function () {
+            $('#search-suggest').hide();
+        });
+
+        //li元素添加事件代理，以便于点击提示框中结果，可以跳转到必应的搜索页面
+        //delegate()定义和用法：
+        //delegate() 方法为指定的元素（属于被选元素的子元素）添加一个或多个事件处理程序，并规定当这些事件发生时运行的函数。
+        //使用 delegate() 方法的事件处理程序适用于当前或未来的元素（比如由脚本创建的新元素）。
+        $(document).delegate('li', 'click', function () {
+            var keyword = $(this).text();
+            location.href = 'http://cn.bing.com/search?q=' + keyword;
         });
     </script>
 </body>
