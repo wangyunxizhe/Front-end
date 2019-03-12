@@ -1,0 +1,126 @@
+<html>
+
+<head>
+    <title>模拟必应搜索框</title>
+    <!-- 浏览器兼容性：以最新的IE引擎解析文档 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <style type="text/css">
+        body {
+            background-color: #333;
+        }
+
+        .bg-div {
+            background-image: url(river.jpg);
+            width: 1228px;
+            height: 690px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .logo {
+            margin: -4px 18px 0 0;
+            background-image: url(logo.png);
+            width: 107px;
+            height: 53px;
+            float: left;
+        }
+
+        .search-form {
+            float: left;
+            background-color: #fff;
+            padding: 5px;
+        }
+
+        .search-text {
+            border: 0;
+            float: left;
+            height: 25px;
+            /* input输入区域垂直居中 */
+            line-height: 25px;
+            /* 取消input框选中时蓝色高亮显示 */
+            outline: none;
+            width: 350px;
+        }
+
+        .search-button {
+            border: 0;
+            background-image: url(search-button.png);
+            width: 29px;
+            height: 29px;
+            float: left;
+        }
+
+        .search-box {
+            /* 绝对定位：当前这个元素相对与body左上角的位置 */
+            position: absolute;
+            top: 200px;
+            left: 300px;
+        }
+
+        /* 智能提示框的样式 */
+        .suggest {
+            /* 与搜索框宽度相同，背景色也相同 */
+            width: 388px;
+            background-color: #fff;
+            /* 外边框：一像素宽的灰色实线 */
+            border: 1px solid #999;
+        }
+
+        .suggest ul {
+            /* 去除默认的列表样式 */
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .suggest ul li {
+            /* 列表中元素的行间距：3px */
+            padding: 3px;
+            font-size: 14px;
+            /* 行高 */
+            line-height: 25px;
+            /* 将鼠标移动到该元素时设置为小手 */
+            cursor: pointer;
+        }
+
+        /* 鼠标移动到列表选项时，加下划线效果，以及高亮显示 */
+        .suggest ul li:hover {
+            text-decoration: underline;
+            background-color: #e5e5e5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-div">
+        <div class="search-box">
+            <div class="logo"> </div>
+            <form class="search-form" action="https://cn.bing.com/search" target="_blank" id="search-form">
+                <input type="text" class="search-text" name="q" id="search_input" autocomplete="off" />
+                <input type="submit" class="search-button" value="" />
+            </form>
+        </div>
+    </div>
+    <!-- 模拟自动提示的内容 -->
+    <!-- <div class="suggest" id="search-suggest" style="position: absolute;top: 100px;left: 100px;"> -->
+    <div class="suggest" id="search-suggest" style="display: none;">
+        <ul>
+            <li>模拟搜索结果1</li>
+            <li>模拟搜索结果2</li>
+        </ul>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script>
+        // 元素search_input绑定键盘输入事件
+        $('#search_input').bind('keyup', function () {
+            $('#search-suggest').show().css({
+                top: $('#search-form').offset().top + $('#search-form').height(), //$('#search-form').offset().top：获取元素search-form距离浏览器上方的位置
+                left: $('#search-form').offset().left, //获取元素search-form距离浏览器左边的位置
+                position: 'absolute'
+            });
+        });
+    </script>
+</body>
+
+</html>
