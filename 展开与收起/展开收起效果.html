@@ -1,0 +1,79 @@
+<html>
+
+<head>
+    <title>展开与收起</title>
+    <!-- 浏览器兼容性：以最新的IE引擎解析文档 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8">
+    <style type="text/css">
+        body {
+            margin: 0 auto;
+            padding: 0px;
+        }
+
+        #pn {
+            background: #e8e8e8;
+            width: 600px;
+            display: block;
+            /* 该元素水平居中 */
+            margin: 0 auto;
+            /* 该元素内部元素间距为5px */
+            padding: 5px;
+            font-size: 9pt;
+            height: auto;
+        }
+
+        .slide {
+            margin: 0 auto;
+            padding: 0px;
+            width: 600px;
+            border-top: solid 4px gray;
+        }
+
+        .btn-slide {
+            background: grey;
+            width: 120px;
+            height: 30px;
+            text-align: center;
+            margin: 0 auto;
+            /* display: block设置元素为块级元素
+            a 标签，在默认情况下是是“行内元素”，因此对a标签设置高度、宽度等属性，都是无效的。
+            所以强制将它改成块级元素来设置 */
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 0 0 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="pn">
+        <p>海贼王</p>
+        <p>火影忍者</p>
+        <!-- 下面的div为展开的内容 -->
+        <div id="hpn" style="display:none">
+            <p>镇魂街</p>
+            <p>熊出没</p>
+        </div>
+    </div>
+    <!-- 展开/收起标签 -->
+    <p class="slide"><a href="javascript:showdiv();" id="strHref" class="btn-slide">更多选项+</a></p>
+
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script>
+        //展开功能
+        function showdiv() {
+            $("#hpn").css('display', 'block');
+            $("#strHref").html('收起-');
+            $("#strHref").attr('href', 'javascript:hidediv()');
+        }
+        //收起功能
+        function hidediv() {
+            $("#hpn").css('display', 'none');
+            $("#strHref").html('更多选项+');
+            $("#strHref").attr('href', 'javascript:showdiv()');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<html>
+
+<head>
+    <title>按钮控制升降效果</title>
+    <!-- 浏览器兼容性：以最新的IE引擎解析文档 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8">
+    <style type="text/css">
+        body {
+            margin: 0 auto;
+            padding: 0px;
+        }
+
+        #pn {
+            background: #e8e8e8;
+            width: 600px;
+            display: block;
+            /* 该元素水平居中 */
+            margin: 0 auto;
+            /* 该元素内部元素间距为5px */
+            padding: 5px;
+            font-size: 9pt;
+            height: auto;
+        }
+
+        #hpn {
+            background: #e8e8e8;
+            width: 600px;
+            /* 该元素水平居中 */
+            margin: 0 auto;
+            /* 该元素内部元素间距为5px */
+            padding: 5px;
+            font-size: 9pt;
+            height: auto;
+        }
+
+        .slide {
+            margin: 0 auto;
+            padding: 0px;
+            width: 600px;
+            border-top: solid 4px gray;
+        }
+
+        .btn-slide {
+            background: grey;
+            width: 120px;
+            height: 30px;
+            text-align: center;
+            margin: 0 auto;
+            /* display: block设置元素为块级元素
+            a 标签，在默认情况下是是“行内元素”，因此对a标签设置高度、宽度等属性，都是无效的。
+            所以强制将它改成块级元素来设置 */
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 0 0 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="pn">
+        <p>海贼王</p>
+        <p>火影忍者</p>
+        <!-- 下面的div为展开的内容 -->
+        <div id="hpn" style="display:none">
+            <p>镇魂街</p>
+            <p>熊出没</p>
+        </div>
+    </div>
+    <!-- 展开/收起标签 -->
+    <p class="slide"><a href="#" id="strHref" class="btn-slide">更多选项+</a></p>
+
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script>
+        $(function () {
+            //定义和用法：切换 Hide() 和 Show()；检查每个元素是否可见。如果元素已隐藏，则运行 show()。如果元素可见，则元素 hide()。这样就可以创造切换效果。
+            //语法：$(selector).toggle(speed,callback)
+            $('#strHref').on('click', function () {
+                $(this).text(
+                    $(this).text() == "收起-" ? "更多选项+" : "收起-"
+                );
+                $('#hpn').toggle(1000);
+            });
+        });
+    </script>
+</body>
+
+</html>
