@@ -14,6 +14,7 @@
             width: 1228px;
             height: 690px;
             margin: 0 auto;
+            /* 相对定位：将该元素设置为用来定位的父标签 */
             position: relative;
         }
 
@@ -51,7 +52,7 @@
         }
 
         .search-box {
-            /* 绝对定位：当前这个元素相对与body左上角的位置 */
+            /* 绝对定位：当前这个元素相对与body左上角的位置。如果父级标签中有定义position: relative，那会以该父级标签作为定位目标 */
             position: absolute;
             top: 150px;
             left: 200px;
