@@ -1,0 +1,51 @@
+<html>
+
+<head>
+    <title>限时倒计时</title>
+    <!-- 浏览器兼容性：以最新的IE引擎解析文档 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8">
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script>
+        $(function () {
+            showTime();
+        });
+
+        //分钟或者秒数为个位时，前面补0
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        }
+
+        function showTime() {
+            var curtime = new Date();
+            var endtime = new Date('2020/3/14,17:00:00'); //结束时间
+            var lefttime = parseInt((endtime.getTime() - curtime.getTime()) / 1000); //获取时间差：秒数取整
+            var day = parseInt(lefttime / (24 * 60 * 60)); //换算得到天
+            var hour = parseInt(lefttime / (60 * 60) % 24); //换算得到小时
+            var min = parseInt(lefttime / 60 % 60); //换算得到分钟
+            min = checkTime(min);
+            var s = parseInt(lefttime % 60); //换算得到秒
+            s = checkTime(s);
+
+            $("#LeftTime").html(day + "天" + hour + "小时" + min + "分钟" + s + "秒");
+
+            if (lefttime <= 0) {
+                $("#LeftTime").html("倒计时已结束");
+            }
+
+            setTimeout('showTime()', 1000);
+        }
+    </script>
+</head>
+
+<body>
+    <div class="content3">
+        <div class="time">距离2020/3/14 17:00:00 还剩 <span id="LeftTime"></span> </div>
+    </div>
+</body>
+
+</html>
