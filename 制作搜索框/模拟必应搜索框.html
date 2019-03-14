@@ -128,6 +128,7 @@
                 $('#search-result').html(html);
                 // 服务器回调成功后展示元素search-suggest
                 $('#search-suggest').css({
+                    //offset()方法会返回一个对象，包含top和left属性
                     top: $('#search-form').offset().top + $('#search-form').height() + 10, //$('#search-form').offset().top：获取元素search-form距离浏览器上方的位置
                     left: $('#search-form').offset().left, //获取元素search-form距离浏览器左边的位置
                     position: 'absolute'
