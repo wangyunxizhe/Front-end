@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图片轮播</title>
+    <style>
+        *{ margin: 0; padding: 0; text-decoration: none;}
+        body { padding: 20px;}
+        #container { width: 600px; height: 400px; border: 3px solid #333; overflow: hidden; position: relative;}
+        #list { width: 4200px; height: 400px; position: absolute; z-index: 1;}
+        #list img { float: left;}
+        #buttons { position: absolute; height: 10px; width: 100px; z-index: 2; bottom: 20px; left: 250px;}
+        #buttons span { cursor: pointer; float: left; border: 1px solid #fff; width: 10px; height: 10px; border-radius: 50%; background: #333; margin-right: 5px;}
+        #buttons .on {  background: orangered;}
+        .arrow { cursor: pointer; display: none; line-height: 39px; text-align: center; font-size: 36px; font-weight: bold; 
+        width: 40px; height: 40px;  position: absolute; z-index: 2; top: 180px; background-color: RGBA(0,0,0,.3); color: #fff;}
+        .arrow:hover { background-color: RGBA(0,0,0,.7);}
+        #container:hover .arrow { display: block;}
+        #prev { left: 20px;}
+        #next { right: 20px;}
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <!-- 图片轮播区域 -->
+        <div id="list" style="left: -600px;">
+            <img src="5.jpg" alt="1" />
+            <img src="1.jpg" alt="1" />
+            <img src="2.jpg" alt="2" />
+            <img src="3.jpg" alt="3" />
+            <img src="4.jpg" alt="4" />
+            <img src="5.jpg" alt="5" />
+            <img src="1.jpg" alt="5" />
+        </div>
+        <!-- 下方圆点切换按钮 -->
+        <div id="buttons">
+            <span index="1" class="on"></span>
+            <span index="2"></span>
+            <span index="3"></span>
+            <span index="4"></span>
+            <span index="5"></span>
+        </div>
+        <!-- 左侧箭头按钮 -->
+        <a href="javascript:;" id="prev" class="arrow">&lt;</a>
+        <!-- 右侧箭头按钮 -->
+        <a href="javascript:;" id="next" class="arrow">&gt;</a>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var list = $("#list");
+            var prev = $("#prev"); //左箭头
+            var next = $("#next"); //右箭头
+
+            var is_finish = false; //标识滑动是否已经完成，防止在滑动还未完成时，不断点击左右箭头而产生的效果计算错乱
+
+            //移动效果（含滑动动画）
+            function moveLeft(offset) {
+                var is_finish = true;
+                var newLeft = parseInt($(list).css('left')) + offset; //以当前距左的距离加上传入的向左偏移量，赋值新的距左距离
+                var time = 300; //位移总时间
+                var interval = 10; //位移间隔时间
+                var speed = offset / (time / interval); //算出每一次的位移量：传入的位移量/需要位移的次数（总位移时间/位移间隔）、
+                //滑动效果
+                function go() {
+                    if ((speed > 0 && parseInt($(list).css('left')) < newLeft) ||
+                        (speed < 0 && parseInt($(list).css('left')) > newLeft)) { //在没有移完前，按speed的偏移量移动，造成缓慢移动的切换效果
+                        $(list).css({
+                            left: parseInt($(list).css('left')) + speed + 'px'
+                        });
+                        setTimeout(go, interval);
+                    } else {
+                        is_finish = false; //已经移动完毕
+                        $(list).css({
+                            left: newLeft + 'px'
+                        });
+                        //下面两个if语句块，就可以让这5张图片有了无限循环的效果（注意这样算的距离是因为这里每张图片宽度为600，有5张。具体情况数字要变）
+                        if (newLeft > -600) { //说明已经移到了1.jpg上面的那张5.jpg元素了
+                            $(list).css({
+                                left: -3000 + 'px' //把距左距离改为到4.jpg下面那张5.jpg元素的距离
+                            });
+                        }
+                        if (newLeft < -3000) { //说明已经移到最下面的那张1.jpg元素了
+                            $(list).css({
+                                left: -600 + 'px' //把距左距离改为到2.jpg上面那张1.jpg元素的距离
+                            });
+                        }
+                    }
+                }
+                go();
+            }
+
+            var buttons = $("#buttons").find('span'); //圆点按钮
+            var index = 1; //用于记录是第几个小圆点
+
+            //点击右箭头
+            $(next).bind('click', function () {
+                if (index == 5) { //说明刚好移到了第5张
+                    index = 1;
+                } else {
+                    index += 1;
+                }
+                showButton();
+                if (!is_finish) { //已经完成滑动效果
+                    moveLeft(-600); //list往左再移600px（单张图片的宽度是600px）
+                }
+            });
+
+            //点击左箭头
+            $(prev).bind('click', function () {
+                if (index == 1) { //说明刚好移到了第1张
+                    index = 5;
+                } else {
+                    index -= 1;
+                }
+                showButton();
+                if (!is_finish) { //已经完成滑动效果
+                    moveLeft(600); //list往右再移600px（单张图片的宽度是600px）
+                }
+            });
+
+            //图片下方小圆点的随动方法
+            function showButton() {
+                $(buttons).each(function () {
+                    if ($(this).attr('class') == 'on') { //一旦找到有元素的class是on
+                        $(this).attr('class', ''); //将该元素class清除
+                        return false;
+                    }
+                });
+                $(buttons).eq(index - 1).attr('class', 'on'); //根据当前的index亮起对应圆点
+            }
+
+            //给每个小圆点绑定点击切换的事件
+            $(buttons).each(function (i) {
+                $(buttons).eq(i).on('click', function () {
+                    if ($(this).attr('class') == 'on') {
+                        return;
+                    }
+                    var spanIndex = $(this).attr('index'); //获取当前点击的小圆点的index属性值
+                    var offset = -600 * (spanIndex - index); //计算出该小圆点对应图片的距左距离
+                    index = spanIndex; //将index变量值更新，以免下次计算值出错
+                    showButton();
+                    if (!is_finish) { //已经完成滑动效果
+                        moveLeft(offset);
+                    }
+                });
+            });
+
+            var timer;
+            //自动切换
+            function autoMoveLeft() {
+                timer = setInterval(function () {
+                    $(next).click();
+                }, 1500);
+            }
+            //停止自动切换
+            function stopAutoMove() {
+                clearInterval(timer);
+            }
+            $("#container").on('mouseover', function () {
+                stopAutoMove();
+            });
+            $("#container").on('mouseout', function () {
+                autoMoveLeft();
+            });
+
+            $(function () {
+                autoMoveLeft();
+            })
+
+        });
+    </script>
+</body>
+
+</html>
