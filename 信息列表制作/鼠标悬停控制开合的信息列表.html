@@ -1,0 +1,107 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>鼠标悬停控制开合的信息列表</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .list {
+            width: 300px;
+            height: 300px;
+            border: 1px solid #ccc;
+            margin: 0 auto;
+        }
+
+        h3 {
+            height: 24px;
+            background-color: #ccc;
+            /* 垂直居中 */
+            line-height: 24px;
+            font-size: 14px;
+            /* 内边距 */
+            padding-left: 10px;
+        }
+
+        ul li {
+            /* 设置li标签的图标样式。这里设置成小方块 
+            list-style-type: square; */
+            /* 去除li标签的样式 */
+            list-style: none;
+            border-bottom: 1px dotted #ccc;
+            line-height: 24px;
+            color: #333;
+            font-size: 12px;
+            padding-left: 10px;
+        }
+
+        ul li span {
+            width: 20px;
+            height: 20px;
+            background-color: #F93;
+            /* 因为span是内联元素，如果不加该属性，设置宽，高，内/外边距均不会有效果。加上后即可保留内联元素的特性，也可设置宽高等等 */
+            display: inline-block;
+            text-align: center;
+            line-height: 20px;
+            margin-right: 10px;
+        }
+
+        ul li dl {
+            padding-left: 10px;
+            display: none;
+        }
+
+        /* 为指定的li标签添加鼠标悬停时的效果 */
+        ul li:hover dl {
+            display: block;
+        }
+
+        ul li:hover span {
+            background-color: #666;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="list">
+        <h3>游戏排行</h3>
+        <ul>
+            <li><span>^</span><a href="#">魔兽世界</a>
+                <dl>
+                    <dt>为了部落</dt>
+                    <dd>暴雪制造</dd>
+                    <dd>亡灵MS</dd>
+                </dl>
+            </li>
+            <li><span>^</span><a href="#">GTA5</a>
+                <dl>
+                    <dt>BBBBB</dt>
+                    <dd>bbbbb</dd>
+                    <dd>BbBbB</dd>
+                </dl>
+            </li>
+            <li><span>^</span><a href="#">绝地求生</a>
+                <dl>
+                    <dt>CCCCC</dt>
+                    <dd>ccccc</dd>
+                    <dd>CcCcC</dd>
+                </dl>
+            </li>
+            <li><span>^</span><a href="#">英雄联盟</a>
+                <dl>
+                    <dt>DDDDD</dt>
+                    <dd>ddddd</dd>
+                    <dd>DdDdD</dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+</body>
+
+</html>
