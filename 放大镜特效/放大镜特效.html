@@ -1,0 +1,139 @@
+<html>
+
+<head>
+    <title>放大镜特效</title>
+    <meta charset="utf-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        #demo {
+            display: block;
+            width: 400px;
+            height: 255px;
+            margin: 50px;
+            position: relative;
+            border: 1px solid #ccc;
+        }
+
+        #small-box {
+            position: relative;
+            z-index: 1;
+        }
+
+        #float-box {
+            display: none;
+            width: 160px;
+            height: 120px;
+            position: absolute;
+            background: #ffffcc;
+            border: 1px solid #ccc;
+            filter: alpha(opacity=50);
+            opacity: 0.5;
+        }
+
+        #mark {
+            position: absolute;
+            display: block;
+            width: 400px;
+            height: 255px;
+            background-color: #fff;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            z-index: 10;
+        }
+
+        #big-box {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 460px;
+            width: 400px;
+            height: 300px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            z-index: 1;
+            ;
+        }
+
+        #big-box img {
+            position: absolute;
+            z-index: 5
+        }
+    </style>
+</head>
+
+<body>
+    <div id="demo">
+        <!-- 小图片容器 -->
+        <div id="small-box">
+            <!-- 做浏览器兼容用的div -->
+            <div id="mark"></div>
+            <!-- 用来当放大镜的div -->
+            <div id="float-box"></div>
+            <img src="macbook-small.jpg" />
+        </div>
+        <!-- 大图片容器 -->
+        <div id="big-box">
+            <img src="macbook-big.jpg" />
+        </div>
+    </div>
+</body>
+
+<script>
+
+    //页面加载完毕后执行
+    window.onload = function () {
+
+        var objDemo = document.getElementById("demo");//最外层div
+        var objSmallBox = document.getElementById("small-box");//小容器div
+        var objMark = document.getElementById("mark");
+        var objFloatBox = document.getElementById("float-box");//放大镜div
+        var objBigBox = document.getElementById("big-box");//大容器div
+        var objBigBoxImage = objBigBox.getElementsByTagName("img")[0];//大图片
+        //鼠标移至事件：鼠标移到div-->objMark时，显示放大镜和大容器
+        objMark.onmouseover = function () {
+            objFloatBox.style.display = "block"
+            objBigBox.style.display = "block"
+        }
+        //鼠标移出事件：和 移至 事件相反
+        objMark.onmouseout = function () {
+            objFloatBox.style.display = "none"
+            objBigBox.style.display = "none"
+        }
+        //鼠标移动事件：鼠标在div-->objMark上移动时
+        objMark.onmousemove = function (ev) {
+
+            var _event = ev || window.event;  //兼容多个浏览器的event参数模式，ie浏览器要用window.event
+            //left公式：鼠标的X坐标值 - 最外层div距左距离 - 小容器div距左距离 - 放大镜div宽度的一半
+            var left = _event.clientX - objDemo.offsetLeft - objSmallBox.offsetLeft - objFloatBox.offsetWidth / 2;
+            //top公式：鼠标的Y坐标值 - 最外层div距顶距离 - 小容器div距顶距离 - 放大镜div高度的一半
+            var top = _event.clientY - objDemo.offsetTop - objSmallBox.offsetTop - objFloatBox.offsetHeight / 2;
+            //防止放大镜div的移出小容器div，当左侧和顶部超出时，则固定住，不再移动
+            if (left < 0) {
+                left = 0;
+            } else if (left > (objMark.offsetWidth - objFloatBox.offsetWidth)) {
+                left = objMark.offsetWidth - objFloatBox.offsetWidth;
+            }
+            if (top < 0) {
+                top = 0;
+            } else if (top > (objMark.offsetHeight - objFloatBox.offsetHeight)) {
+                top = objMark.offsetHeight - objFloatBox.offsetHeight;
+
+            }
+            //设置放大镜div的距左以及距顶的距离
+            objFloatBox.style.left = left + "px";   //oSmall.offsetLeft的值是相对什么而言
+            objFloatBox.style.top = top + "px";
+            //下两行代码是为大图片可以跟随小图片做同比例移动而计算的横纵向位移比例
+            var percentX = left / (objMark.offsetWidth - objFloatBox.offsetWidth);
+            var percentY = top / (objMark.offsetHeight - objFloatBox.offsetHeight);
+            //设置大容器div的距左以及距顶的距离。注意：大图片跟小图片移动方向相反，所以前面记得加 - 号
+            objBigBoxImage.style.left = -percentX * (objBigBoxImage.offsetWidth - objBigBox.offsetWidth) + "px";
+            objBigBoxImage.style.top = -percentY * (objBigBoxImage.offsetHeight - objBigBox.offsetHeight) + "px";
+        }
+    }
+</script>
+
+</html>
