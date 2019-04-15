@@ -1,0 +1,77 @@
+<html>
+
+<head>
+    <title>回到顶部</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        .box {
+            width: 1190px;
+            margin: 0 auto;
+        }
+
+        #btn {
+            width: 40px;
+            height: 40px;
+            position: fixed;
+            left: 50%;
+            margin-left: 610px;
+            bottom: 30px;
+            /* no-repeat：不平铺 */
+            background: url("images/top_bg.png") no-repeat left top;
+            display: none;
+        }
+
+        /* 鼠标移至“回到顶部”按钮时，显示top_bg.png的下半截 */
+        #btn:hover {
+            background: url("images/top_bg.png") no-repeat left -40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <img src="images/tb_bg.jpg" />
+    </div>
+    <a href="javascript:;" id="btn" title="回到顶部"></a>
+</body>
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+    window.onload = function () {
+        var btn = $("#btn");
+        var timer = null;
+
+        var isTop = true;
+        var wHeight = document.body.clientHeight; //获取页面可视区域的高度
+
+        //滚动条滚动时触发：1，以便在回到顶部的过程中，用户滚动了滚轮，可以停止继续回到顶部。2，在滚动条滚到一定位置时，才会显示“回到顶部”的按钮
+        window.onscroll = function () {
+            var osTop = $(window).scrollTop();//获取滚动条距顶距离
+            if (osTop >= wHeight) {
+                btn.css('display', 'block');
+            } else {
+                btn.css('display', 'none');
+            }
+            if (!isTop) {
+                clearInterval(timer);
+            }
+            isTop = false;
+        }
+        //为“回到顶部”绑定点击事件
+        $(btn).bind('click', function () {
+            //设置定时器
+            timer = setInterval(function () {
+                var osTop = $(window).scrollTop();//获取滚动条距顶距离
+                var speed = Math.floor(-osTop / 6);//速度：以便实现滚动条由快到慢的效果
+                //$(window).scrollTop($(window).scrollTop() - 50);//每点一次 - 50
+                $(window).scrollTop(osTop + speed);
+                isTop = true;
+                if (osTop == 0) {//已经回到顶部，清除定时器
+                    clearInterval(timer);
+                }
+            }, 30);
+        });
+    }
+</script>
+
+</html>
