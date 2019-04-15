@@ -1,0 +1,255 @@
+<html>
+
+<head>
+    <title>CSS实现手风琴效果</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        body,
+        ul,
+        li,
+        p,
+        h3 {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul,
+        ol {
+            list-style: none;
+        }
+
+        .wrapper {
+            width: 938px;
+            height: 128px;
+            border: 1px solid #d3d3d3;
+        }
+
+        .wrapper li {
+            width: 156px;
+            height: 128px;
+            float: left;
+            overflow: hidden;
+        }
+
+        .wrapper li a {
+            display: block;
+            height: 128px;
+            width: 156px;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        /* (a标签：position: relative; img标签：position: absolute;): img将a作为参照物来调整位置  */
+        .wrapper img {
+            width: 117px;
+            height: 72px;
+            position: absolute;
+            bottom: 0px;
+            right: -15px;
+        }
+
+        .wrapper .info {
+            width: 136px;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            padding: 4px 10px;
+        }
+
+        .wrapper .info h3 {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .wrapper .info p {
+            color: #868686;
+            font-size: 12px;
+            height: 22px;
+            line-height: 22px;
+            width: 136px;
+            overflow: hidden;
+        }
+
+        .wrapper .info .price {
+            font-size: 14px;
+            /*斜体字*/
+            font-style: italic;
+            color: #fa2a5d;
+            height: 35px;
+        }
+
+        .wrapper .line {
+            position: absolute;
+            right: 0px;
+            width: 0px;
+            height: 128px;
+            border: 1px dashed #cacaca;
+        }
+
+        /* 遮罩层样式 */
+        .wrapper .mask {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            height: 128px;
+            width: 156px;
+            /* 透明度 0 */
+            opacity: 0;
+            background: #000;
+        }
+
+        /* 鼠标悬停时 */
+        .wrapper:hover .mask {
+            /* 透明度改变 */
+            opacity: 0.15;
+        }
+
+
+        /* 下面的CSS设置就是关于展开后的图片的样式 */
+        .wrapper ul * {
+            /* ul下所有的元素都会平滑的进行改变样式 */
+            transition: all linear 0.1s;
+        }
+
+        .wrapper li.big,
+        li.big a {
+            width: 314px;
+        }
+
+        .wrapper li.big img {
+            width: 195px;
+            height: 120px;
+            right: 0;
+            bottom: 0;
+        }
+
+        .wrapper li.big .info {
+            width: 290px;
+        }
+
+        .wrapper li.big h3 {
+            font-size: 18px;
+        }
+
+        .wrapper li.big p {
+            font-size: 14px;
+            width: 166px;
+        }
+
+        .wrapper li.big p.price {
+            font-size: 16px;
+            padding-top: 7px;
+        }
+
+        .wrapper li.big a:hover .mask {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="subject" class="wrapper">
+        <ul>
+            <li><a href="#link1">
+                    <img src="imgs/1.jpg" />
+                    <div class="info">
+                        <h3 style="color:#f62368">图片1</h3>
+                        <p>图片1的简介</p>
+                        <p class="price"><strong>1</strong><i>张</i></p>
+                    </div>
+                    <!-- 图片边缘的虚线 -->
+                    <i class="line"></i>
+                    <!-- 遮罩层 -->
+                    <i class="mask"></i>
+                </a></li>
+            <li><a href="#link1">
+                    <img src="imgs/2.jpg" />
+                    <div class="info">
+                        <h3 style="color:hotpink">图片2</h3>
+                        <p>图片2的简介</p>
+                        <p class="price"><strong>2</strong><i>张</i></p>
+                    </div>
+                    <!-- 图片边缘的虚线 -->
+                    <i class="line"></i>
+                    <!-- 遮罩层 -->
+                    <i class="mask"></i>
+                </a></li>
+            <li><a href="#link1">
+                    <img src="imgs/3.jpg" />
+                    <div class="info">
+                        <h3 style="color:khaki">图片3</h3>
+                        <p>图片3的简介</p>
+                        <p class="price"><strong>3</strong><i>张</i></p>
+                    </div>
+                    <!-- 图片边缘的虚线 -->
+                    <i class="line"></i>
+                    <!-- 遮罩层 -->
+                    <i class="mask"></i>
+                </a></li>
+            <li><a href="#link1">
+                    <img src="imgs/4.jpg" />
+                    <div class="info">
+                        <h3 style="color:lightgrey">图片4</h3>
+                        <p>图片4的简介</p>
+                        <p class="price"><strong>4</strong><i>张</i></p>
+                    </div>
+                    <!-- 图片边缘的虚线 -->
+                    <i class="line"></i>
+                    <!-- 遮罩层 -->
+                    <i class="mask"></i>
+                </a></li>
+            <li><a href="#link1">
+                    <img src="imgs/5.jpg" />
+                    <div class="info">
+                        <h3 style="color:maroon">图片5</h3>
+                        <p>图片5的简介</p>
+                        <p class="price"><strong>5</strong><i>张</i></p>
+                    </div>
+                    <!-- 遮罩层 -->
+                    <i class="mask"></i>
+                </a></li>
+        </ul>
+    </div>
+</body>
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+    window.onload = function () {
+        //参数为：元素，事件类型，回调
+        function bind(el, eventType, callback) {
+            if (typeof el.addEventListener === 'function') {//普通浏览器
+                el.addEventListener(eventType, callback, false);
+            } else if (typeof el.attechEvent === 'function') {//ie浏览器
+                el.attechEvent('on' + eventType, callback);
+            }
+        }
+
+        function mouseoverHandler(event) {
+            //获取该事件的触法者。普通浏览器||ie浏览器
+            var target = event.target || event.srcElement;
+            var outer = $("#subject");
+            var list = $(outer).find("li");
+            for (var i = 0; i < list.length; i++) {
+                list[i].className = '';//先去除所有li标签的class样式
+            }
+            //直到找到li元素
+            while (target.tagName != 'LI' && target.tagName != 'BODY') {
+                target = target.parentNode;
+            }
+            target.className = 'big';
+        }
+
+        function initList() {
+            var outer = $("#subject");
+            var list = $(outer).find("li");
+            for (var i = 0; i < list.length; i++) {
+                bind(list[i], 'mouseover', mouseoverHandler);
+            }
+        }
+
+        initList();
+    }
+</script>
+
+</html>
