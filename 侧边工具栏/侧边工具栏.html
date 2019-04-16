@@ -1,0 +1,165 @@
+<html>
+
+<head>
+    <title>侧边工具栏</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap-theme.css">
+    <style type="text/css">
+        ul {
+            list-style: none;
+            padding-left: 0px;
+        }
+
+        #sidebar {
+            width: 35px;
+            background: #e1e1e1;
+            padding-top: 200px;
+            /* 固定元素 */
+            position: fixed;
+            min-height: 100%;
+            /* 值越大，该元素在与其他元素重叠时，将会盖在比它值小的元素上。
+             在这里#sidebar就会盖在.nav-content上面 */
+            z-index: 100;
+        }
+
+        .item {
+            font-size: 12px;
+            font-family: 'Microsoft YaHei';
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        #close {
+            position: absolute;
+            bottom: 30px;
+            width: 35px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .nav-content {
+            width: 200px;
+            position: fixed;
+            min-height: 100%;
+            background: #e1e1e1;
+            border: 1px solid black;
+            z-index: 99;
+            /* 因为后续需要实现动画效果，所以这里并不能用display:none来隐藏该元素，而是将该元素透明 */
+            opacity: 0;
+        }
+
+        .nav-con-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 缩略后的各个侧边工具栏 -->
+    <div id="sidebar">
+        <ul>
+            <li id="my" class="item">
+                <span class="glyphicon glyphicon-user"></span>
+                <div>我</div>
+            </li>
+            <li id="money" class="item">
+                <span class="glyphicon glyphicon-usd"></span>
+                <div>资产</div>
+            </li>
+            <li id="brand" class="item">
+                <span class="glyphicon glyphicon-heart"></span>
+                <div>品牌</div>
+            </li>
+            <li id="mv" class="item">
+                <span class="glyphicon glyphicon-bell"></span>
+                <div>直播</div>
+            </li>
+            <li id="looked" class="item">
+                <span class="glyphicon glyphicon-eye-open"></span>
+                <div>看过</div>
+            </li>
+            <li id="date" class="item">
+                <span class="glyphicon glyphicon-time"></span>
+                <div>日历</div>
+            </li>
+        </ul>
+        <!-- 侧边工具栏关闭按钮 -->
+        <div id="close"><span class="glyphicon glyphicon-remove"></span></div>
+    </div>
+    <!-- 展开后的各个侧边工具栏 -->
+    <div class="nav-content" id="my-content">
+        <div class="nav-con-close">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </div>
+        <div>我</div>
+    </div>
+    <div class="nav-content" id="money-content">
+        <div class="nav-con-close">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </div>
+        <div></div>
+    </div>
+    <div class="nav-content" id="brand-content">
+        <div class="nav-con-close">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </div>
+        <div></div>
+    </div>
+    <div class="nav-content" id="mv-content">
+        <div class="nav-con-close">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </div>
+        <div></div>
+    </div>
+    <div class="nav-content" id="looked-content">
+        <div class="nav-con-close">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </div>
+        <div></div>
+    </div>
+    <div class="nav-content" id="date-content">
+        <div class="nav-con-close">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </div>
+        <div></div>
+    </div>
+</body>
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+    //会立即执行的匿名方法
+    (function () {
+        //创建构造函数基本规范：变量首字母大写
+        var Sidebar = function (eId, closeId) {
+            this.state = 'opened';//示例中Sidebar会有两种行为：打开，关闭
+            this.el = $("#" + eId);
+            this.closeEl = $("#" + closeId);
+            this.el.addEventListener('click', function (event) {
+                if (event.target !== this.el) {//event.target-->该事件的触法者
+                    this.triggerSwitch();
+                }
+            });//参数为：事件名称，回调方法，事件传播方式（向上冒泡/向下冒泡，这里采用默认所以不传）
+        };
+        //关闭行为方法
+        Sidebar.prototype.close = function () {
+
+        };
+        //打开行为方法
+        Sidebar.prototype.open = function () {
+
+        };
+        //判断是打开行为还是关闭行为
+        Sidebar.prototype.triggerSwitch = function () {
+            if (this.state === 'opened') {//状态为打开时，调用关闭行为方法
+                this.close();
+            } else {
+                this.open();
+            }
+        };
+    })()
+</script>
+
+</html>

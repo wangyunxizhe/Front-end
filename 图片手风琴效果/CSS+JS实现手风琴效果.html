@@ -219,7 +219,7 @@
         //参数为：元素，事件类型，回调
         function bind(el, eventType, callback) {
             if (typeof el.addEventListener === 'function') {//普通浏览器
-                el.addEventListener(eventType, callback, false);
+                el.addEventListener(eventType, callback, false);//参数为：事件名称，回调方法，事件传播方式（向上冒泡/向下冒泡）
             } else if (typeof el.attechEvent === 'function') {//ie浏览器
                 el.attechEvent('on' + eventType, callback);
             }
