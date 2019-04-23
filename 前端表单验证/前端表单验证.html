@@ -1,0 +1,268 @@
+<html>
+
+<head>
+    <title>前端表单验证</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        form {
+            width: 600px;
+            margin: 100px auto;
+        }
+
+        input {
+            width: 160px;
+            height: 28px;
+            line-height: 28px;
+        }
+
+        .title {
+            display: inline-block;
+            width: 80px;
+            text-align: right;
+        }
+
+        p {
+            font-size: 12px;
+            color: gray;
+            width: 300px;
+            float: right;
+            line-height: 28px;
+            vertical-align: top;
+            margin: 2px 30px 0 0;
+        }
+
+        #count {
+            padding-left: 90px;
+            font-size: 12px;
+            color: gray;
+            line-height: 28px;
+        }
+
+        em {
+            display: inline-block;
+            width: 54px;
+            height: 20px;
+            background-color: rgb(255, 204, 157);
+            margin-right: 2px;
+            font-size: 12px;
+            font-style: normal;
+            text-align: center;
+            height: 14px;
+            line-height: 14px;
+            color: white;
+        }
+
+        .active {
+            background-color: rgb(255, 95, 2);
+        }
+
+        #tips {
+            padding-left: 82px;
+        }
+
+        img {
+            height: 30px;
+            vertical-align: middle;
+        }
+
+        .checkimg {
+            width: 100px;
+        }
+
+        #submitBtn {
+            border: 1px solid rgb(255, 95, 2);
+            width: 166px;
+            height: 30px;
+            background-color: rgb(255, 95, 2);
+            color: white;
+            margin-left: 80px;
+        }
+
+        .margin {
+            margin-top: 20px;
+        }
+
+        .msg {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="">
+        <div>
+            <label for="">
+                <span class="title">会员名：</span>
+                <input type="text" class="text" />
+            </label>
+            <p class="msg"></p>
+        </div>
+        <div>
+            <label for=""><span></span><b id="count" style="visibility:hidden">0个字符</b></label>
+        </div>
+
+        <div>
+            <label for="">
+                <span class="title">登录密码：</span>
+                <input type="password" class="text">
+            </label>
+            <p class="msg"><i></i></p>
+        </div>
+        <div id="tips">
+            <label for="">
+                <span></span><em class="active">弱</em><em>中</em><em>强</em>
+            </label>
+        </div>
+
+        <div class="margin"><label for=""><span class="title">确认密码：</span><input type="password" class="text"
+                    disabled=""></label>
+            <p class="msg"><i></i>请再输入一次</p>
+        </div>
+
+        <div class="margin">
+            <input type="submit" id="submitBtn" class="submitBtn btn" value="同意协议并注册">
+        </div>
+    </form>
+</body>
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+    //获取字符长度的方法
+    function getLength(str) {
+        return str.replace(/[^\x00-xff]/g, "xx").length;//将双字节的字符都替换成“xx”，汉字就是双字节
+    }
+
+    //获取字符串中相同字符的数量。参数：字符串，需要对比的字符
+    function findSameStr(str, n) {
+        var tmp = 0;
+        for (var i = 0; i < str.length; i++) {
+            if (str.charAt(i) == n) {
+                tmp++;
+            }
+        }
+        return tmp;
+    }
+
+    $(function () {
+        var allInput = document.getElementsByTagName('input');
+        var oName = allInput[0];//会员名输入框
+        var pwd = allInput[1];//密码输入框
+        var pwd2 = allInput[2];//确认密码输入框
+
+        var allP = document.getElementsByTagName('p');
+        var name_msg = allP[0];//会员名提示框
+        var pwd_msg = allP[1];//密码提示框
+        var pwd2_msg = allP[2];//确认密码提示框
+
+        var count = document.getElementById('count');
+        var allEm = document.getElementsByTagName('em');//密码强弱标签
+        var name_len = 0;
+
+        //用户名输入框焦点事件
+        oName.onfocus = function () {
+            name_msg.style.display = 'block';
+            name_msg.innerHTML = '<i></i>5-25个字符，1个汉字为两个字符，推荐使用中文会员名。';
+        }
+
+        //用户名键盘抬起事件
+        oName.onkeyup = function () {
+            count.style.visibility = 'visible';
+            name_len = getLength(this.value);//计算oName input框中的字符长度
+            count.innerHTML = name_len + "个字符";
+            if (name_len == 0) {
+                count.style.visibility = 'hidden';
+            }
+        }
+
+        //用户名失焦事件
+        oName.onblur = function () {
+            //1，含有非法字符
+            //合法用户名：数字/字母（不分大小写）/汉字/下划线；长度5-25
+            //汉字的unicode码范围：\u4e00 - \u9fa5
+            var re = /[^\w\u4e00-\u9fa5]/g;// 用户名正则：表示[取反\字母\汉字]/全局匹配
+            if (re.test(this.value)) {
+                name_msg.innerHTML = '<i></i>含有非法字符！';
+            }
+            //2，不能为空
+            else if (this.value == "") {
+                name_msg.innerHTML = '<i></i>不能为空！';
+            }
+            //3，大于25个字符
+            else if (name_len > 25) {
+                name_msg.innerHTML = '<i></i>大于25个字符！';
+            }
+            //4，少于6个字符
+            else if (name_len < 6) {
+                name_msg.innerHTML = '<i></i>少于6个字符！';
+            } else {
+                name_msg.innerHTML = '<i></i>OK！';
+            }
+        }
+
+        //密码输入框焦点事件
+        pwd.onfocus = function () {
+            pwd_msg.style.display = 'block';
+            pwd_msg.innerHTML = '<i></i>6-16个字符，请使用字母加数字或符合的组合，不能单独使用字母/数字或符合。';
+        }
+
+        //密码键盘抬起事件
+        pwd.onkeyup = function () {
+            //大于5个字符=“中”
+            if (this.value.length > 5) {
+                allEm[1].className = 'active';
+                pwd2.removeAttribute('disabled');//确认密码输入框变为可用状态
+                pwd2_msg.style.display = 'block';
+            } else {
+                allEm[1].className = '';
+                pwd2.setAttribute('disabled', '');//确认密码输入框变为不可用状态
+                pwd2_msg.style.display = 'none';
+            }
+            //大于10个字符=“强”
+            if (this.value.length > 10) {
+                allEm[2].className = 'active';
+            } else {
+                allEm[2].className = '';
+            }
+        }
+
+        //密码失焦事件
+        pwd.onblur = function () {
+            var m = findSameStr(this.value, this.value[0]);
+            var re_n = /[^\d]/g;
+            var re_t = /[^a-zA-Z]/g;
+            //1，不能为空
+            if (this.value == "") {
+                pwd_msg.innerHTML = '<i></i>不能为空！';
+            }
+            //2，不能用相同字符
+            else if (m == this.value.length) {
+                pwd_msg.innerHTML = '<i></i>不能用相同字符！';
+            }
+            //3，长度6-16
+            else if (this.value.length < 6 || this.value.length > 16) {
+                pwd_msg.innerHTML = '<i></i>长度应为6-16个字符！';
+            }
+            //4，不能全数字
+            else if (!re_n.test(this.value)) {
+                pwd_msg.innerHTML = '<i></i>不能全数字！';
+            }
+            //5，不能全字母
+            else if (!re_t.test(this.value)) {
+                pwd_msg.innerHTML = '<i></i>不能全字母！';
+            } else {
+                pwd_msg.innerHTML = '<i></i>OK！';
+            }
+        }
+
+        //确认密码失焦事件
+        pwd2.onblur = function () {
+            if (this.value != pwd.value) {
+                pwd2_msg.innerHTML = '<i></i>两次输入的密码不一致！';
+            } else {
+                pwd2_msg.innerHTML = '<i></i>OK！';
+            }
+        }
+    });
+</script>
+
+</html>
