@@ -1,0 +1,167 @@
+<html>
+
+<head>
+    <title>瀑布流布局</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main {
+            position: relative;
+        }
+
+        .box {
+            padding: 15px 0 0 15px;
+            float: left;
+        }
+
+        .pic {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #ccc;
+        }
+
+        .pic img {
+            width: 165px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <div class="box">
+            <div class="pic"><img src="images/1.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/2.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/3.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/4.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/5.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/6.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/7.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/8.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/9.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/10.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/11.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/12.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/13.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/14.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/15.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/16.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/17.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/18.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/19.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/20.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/21.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/22.jpg"></div>
+        </div>
+        <div class="box">
+            <div class="pic"><img src="images/23.jpg"></div>
+        </div>
+    </div>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+    $(window).on('load', function () {
+        waterFall();
+        var testData = {
+            'data': [{ 'path': 'images/24.jpg' }, { 'path': 'images/25.jpg' }, { 'path': 'images/26.jpg' },
+            { 'path': 'images/27.jpg' }, { 'path': 'images/28.jpg' }, { 'path': 'images/29.jpg' },
+            { 'path': 'images/30.jpg' }, { 'path': 'images/31.jpg' }, { 'path': 'images/32.jpg' },
+            { 'path': 'images/33.jpg' }, { 'path': 'images/34.jpg' }, { 'path': 'images/35.jpg' },
+            { 'path': 'images/36.jpg' }, { 'path': 'images/37.jpg' }, { 'path': 'images/38.jpg' }]
+        }
+        $(window).on('scroll', function () {
+            if (checkScrollSlide()) {
+                //遍历testData中的data
+                $.each(testData.data, function (key, val) {
+                    var oBox = $('<div>').addClass('box').appendTo($('#main'));//jquery创建元素语法：$('html标签')
+                    var oPic = $('<div>').addClass('pic').appendTo($(oBox));//创建指定div，并追加到刚创建的oBox中
+                    var oImg = $('<img>').attr('src', $(val).attr('path'));
+                    $(oImg).appendTo($(oPic));
+                });
+                waterFall();
+            }
+        });
+    });
+
+    function waterFall() {
+        var boxs = $('#main>div');//获取#main元素下所有的第一级div
+        var w = boxs.eq(0).outerWidth();//获取列宽（每个box宽度是一样的）。outerWidth：包含pidding+border+...+元素自身宽度的值
+        var cols = Math.floor($(window).width() / w)//计算有多少列：页面宽度/列宽 取整数
+        $('#main').width(w * cols).css('margin', '0 auto');//设置main的宽度，并居中
+        var hArr = [];//用于存放每一列每张图片高度的数组
+        boxs.each(function (index, boxEl) {
+            var h = boxs.eq(index).outerHeight();//获取每个box的高
+            if (index < cols) {//第一行的范围
+                hArr[index] = h;//将第一行的每个box高度放入数组
+            } else {//进入第二，三。。。行
+                var minH = Math.min.apply(null, hArr);//获取现有数组中最小的值
+                var minHIndex = $.inArray(minH, hArr);//获取最小值在数组中的索引
+                $(boxEl).css({
+                    'position': 'absolute',
+                    'top': minH + 'px',
+                    'left': minHIndex * w + 'px'//距左距离：假如最低的是第4张，那么距左距离就是（3*每张的宽度），正好循环从0开始，直接使用minHIndex * w
+                });
+                hArr[minHIndex] += boxs.eq(index).outerHeight();//将原数组中最小值更新：最小值加上当前box的高度
+            }
+        });
+    }
+
+    //滚动位置是否具备了加载图片的条件
+    function checkScrollSlide() {
+        var lastBox = $('#main>div').last();//获取最后一个box元素
+        var lastBoxDis = lastBox.offset().top + Math.floor(lastBox.outerHeight() / 2);//加载位置：最后一张图片的距顶距离+自身高度的一半
+        var scrollTop = $(window).scrollTop();//页面滚动距离
+        var documentH = $(window).height();//页面高度
+        return (lastBoxDis < scrollTop + documentH) ? true : false;//加载位置<页面滚动距离+页面高度时，就需要加载新图片了
+    }
+</script>
+
+</html>
