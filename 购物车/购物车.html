@@ -1,0 +1,238 @@
+<html>
+
+<head>
+    <title>购物车</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" />
+    <style type="text/css">
+        .on {
+            background: RGB(238, 246, 255);
+        }
+    </style>
+</head>
+
+<body>
+    <table id="cartTable">
+        <thead>
+            <tr>
+                <th><label><input class="check-all check" type="checkbox" />&nbsp;全选</label></th>
+                <th>商品</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>小计</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="checkbox"><input class="check-one check" type="checkbox" /></td>
+                <td class="goods"><img src="images/1.jpg" alt="" /><span>Casio/卡西欧 EX-TR350</span></td>
+                <td class="price">5999.88</td>
+                <td class="count">
+                    <span class="reduce"></span>
+                    <input class="count-input" type="text" value="1" />
+                    <span class="add">+</span></td>
+                <td class="subtotal">5999.88</td>
+                <td class="operation"><span class="delete">删除</span></td>
+            </tr>
+            <tr>
+                <td class="checkbox"><input class="check-one check" type="checkbox" /></td>
+                <td class="goods"><img src="images/2.jpg" alt="" /><span>Canon/佳能 PowerShot SX50 HS</span></td>
+                <td class="price">3888.50</td>
+                <td class="count"><span class="reduce"></span><input class="count-input" type="text" value="1" /><span
+                        class="add">+</span></td>
+                <td class="subtotal">3888.50</td>
+                <td class="operation"><span class="delete">删除</span></td>
+            </tr>
+            <tr>
+                <td class="checkbox"><input class="check-one check" type="checkbox" /></td>
+                <td class="goods"><img src="images/3.jpg" alt="" /><span>Sony/索尼 DSC-WX300</span></td>
+                <td class="price">1428.50</td>
+                <td class="count"><span class="reduce"></span><input class="count-input" type="text" value="1" /><span
+                        class="add">+</span></td>
+                <td class="subtotal">1428.50</td>
+                <td class="operation"><span class="delete">删除</span></td>
+            </tr>
+            <tr>
+                <td class="checkbox"><input class="check-one check" type="checkbox" /></td>
+                <td class="goods"><img src="images/4.jpg" alt="" /><span>Fujifilm/富士 instax mini 25</span></td>
+                <td class="price">640.60</td>
+                <td class="count"><span class="reduce"></span><input class="count-input" type="text" value="1" /><span
+                        class="add">+</span></td>
+                <td class="subtotal">640.60</td>
+                <td class="operation"><span class="delete">删除</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="foot" id="foot">
+        <label class="fl select-all"><input type="checkbox" class="check-all check" />&nbsp;全选</label>
+        <a class="fl delete" id="deleteAll" href="javascript:;">删除</a>
+        <div class="fr closing">结 算</div>
+        <div class="fr total">合计：￥<span id="priceTotal">0.00</span></div>
+        <div class="fr selected" id="selected">已选商品
+            <span id="selectedTotal">0</span>件
+            <span class="arrow up">︽</span>
+            <span class="arrow down">︾</span>
+        </div>
+        <div class="selected-view">
+            <div id="selectedViewList" class="clearfix">
+                <!--<div><img src="images/1.jpg"><span>取消选择</span></div>-->
+            </div>
+            <span class="arrow">◆<span>◆</span></span>
+        </div>
+    </div>
+</body>
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+    $(window).on('load', function () {
+        var tr = $("#cartTable>tbody>tr");
+        var checkInputs = $(".check");//获取所有checkbox
+
+        checkInputs.each(function (index, checkEl) {//遍历所有checkbox
+            $(checkEl).on('click', function () {
+                if ($(this).attr('class') === 'check-all check') {//点击的是“全选”，勾选所有checkbox
+                    var ca = $(this);
+                    checkInputs.each(function (j, el) {
+                        $(el).prop("checked", ca.get(0).checked);//跟全选框状态同步
+                    });
+                }
+                if ($(this).get(0).checked == false) {//任意一个checkbox被取消勾选
+                    $(".check-all").removeAttr('checked');//所有“全选”的checkbox取消勾选
+                }
+                getTotal(tr);
+            });
+        });
+
+        tr.each(function (index, trEl) {
+
+            //加号，减号点击事件
+            $(trEl).on('click', function (event) {
+                var el = event.target;//获取触发事件的元素
+                var clsName = $(el).attr('class');
+                var input = $(this).find('input').eq(1);
+                var val = parseInt($(input).val());
+                var reduce = $(this).find('span').eq(1);//获取“减号”标签
+                switch (clsName) {
+                    case 'add'://点击的是“加号”
+                        $(input).val(val + 1);
+                        $(reduce).html('-');
+                        getSubTotal(this);
+                        break;
+                    case 'reduce'://点击的是“减号”
+                        if (val > 1) {
+                            $(input).val(val - 1);
+                        }
+                        if ($(input).val() <= 1) {
+                            $(reduce).html('');
+                        }
+                        getSubTotal(this);
+                        break;
+                    case 'delete'://点击的是“删除”
+                        if (confirm('确定要删除吗？')) {
+                            $(this).find('input').eq(0).removeAttr('checked');
+                            $(this).remove();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                getTotal(tr);
+            });
+
+            //数量框键盘输入事件
+            $(trEl).find('input').eq(1).on('keyup', function () {
+                var val = parseInt($(this).val());
+                var thisTr = $(this).parent().parent();
+                var reduce = $(thisTr).find('span').eq(1);
+                if (isNaN(val) || val < 1) {
+                    val = 1;
+                }
+                $(this).val(val);
+                if (val <= 1) {
+                    $(reduce).html('');
+                } else {
+                    $(reduce).html('-');
+                }
+                getSubTotal(thisTr);
+                getTotal(tr);
+            });
+
+        });
+
+    });
+
+    //计算商品，价格的合计
+    function getTotal(tr) {
+        var selected = 0;
+        var price = 0;
+        var html = '';
+        $(tr).each(function (index, trEl) {
+            if (trEl.getElementsByTagName('input')[0].checked) {//当该tr被勾选
+                $(trEl).addClass('on');
+                selected += parseInt(trEl.getElementsByTagName('input')[1].value);//获取商品数量
+                price += parseFloat($(trEl).find('td').eq(4).html());//获取商品单价
+                //获取被勾选的图片，构建新的html，以便替换到“已选商品”的展开菜单中
+                html += '<div><img src="' + $(trEl).find('img').eq(0).attr('src') + '"  /><span class="del" index="' + index + '">取消选择</span></div>';
+            } else {
+                $(trEl).removeClass('on');
+            }
+        });
+        $("#selectedTotal").html(selected);//更新合计商品的数字
+        $("#priceTotal").html(price.toFixed(2));//更新合计金额的数字，固定两位小数
+        $("#selectedViewList").html(html);//替换“已选商品”展开菜单中的内容
+        if (selected == 0) {//说明没有商品被选择
+            $("#foot").removeClass('show');
+        }
+    };
+
+    // 计算单行价格
+    function getSubTotal(tr) {
+        var tds = $(tr).find('td');
+        var price = parseFloat($(tds).eq(2).html());//单价
+        var count = parseInt($(tr).find('input').eq(1).val());//数量
+        var subTotal = parseFloat(price * count);
+        $(tds).eq(4).html(subTotal.toFixed(2));//更新对应的元素值
+    };
+
+    //“已选商品”点击事件
+    $("#selected").on('click', function () {
+        if ($("#foot").attr("class") == 'foot' && $("#selectedTotal").html() > 0) {
+            $("#foot").addClass('show');
+        } else {
+            $("#foot").removeClass('show');
+        }
+    });
+
+    //“取消选择”点击事件
+    $('#selectedViewList').on('click', function (event) {
+        var el = event.target;
+        if ($(el).attr('class') == 'del') {//说明触发事件的元素是“取消选择”的span
+            var index = $(el).attr('index');//在getTotal方法中定义的index属性，是用来标记勾选的是第几行。以便这里点击“取消选择”时，可以解除对应行的勾选状态
+            var input = $("#cartTable>tbody>tr").eq(index).find('input').eq(0);
+            $(input).prop("checked", "false");
+            $(input).click();
+        }
+    });
+
+    //全部删除事件
+    $('#deleteAll').on('click', function () {
+        if ($("#selectedTotal").html() != '0') {
+            if (confirm('确定要删除吗？')) {
+                var trs = $("#cartTable>tbody>tr");
+                $(trs).each(function (index, tr) {
+                    var input = $(tr).find('input').eq(0);
+                    if ($(input).get(0).checked) {
+                        $(this).find('input').eq(0).removeAttr('checked');
+                        $(this).remove();
+                    }
+                });
+            }
+        }
+        getTotal($("#cartTable>tbody>tr"));
+    });
+
+</script>
+
+</html>
