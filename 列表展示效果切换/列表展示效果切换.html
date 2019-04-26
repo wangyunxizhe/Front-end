@@ -1,0 +1,221 @@
+<html>
+
+<head>
+    <title>列表展示效果切换</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            font-family: "微软雅黑";
+            font-size: 14px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        #box {
+            height: auto;
+            width: 550px;
+            border: 1px solid #aaa;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .top {
+            height: 40px;
+        }
+
+        .top a {
+            height: 16px;
+            width: 16px;
+            display: block;
+            float: right;
+            margin: 5px;
+        }
+
+        .btn-list-off {
+            background: url('images/btns.jpg') no-repeat -38px 0px;
+        }
+
+        .btn-car-on {
+            background: url('images/btns.jpg') no-repeat -21px -34px;
+        }
+
+        .btn-list-on {
+            background: #fff url('images/btns.jpg') no-repeat -21px 0px;
+        }
+
+        .btn-car-off {
+            background: #fff url('images/btns.jpg') no-repeat -38px -32px;
+        }
+
+        ul li {
+            list-style: none;
+        }
+
+        #box ul li {
+            height: auto;
+            width: 164px;
+            border: 1px solid #aaa;
+            float: left;
+            margin: 5px;
+        }
+
+        .a-img {
+            height: 164px;
+            width: 164px;
+            display: block;
+            overflow: hidden;
+        }
+
+        p a,
+        p span {
+            display: block;
+            line-height: 23px;
+            padding-left: 10px;
+        }
+
+        .bottom {
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: #ccc;
+        }
+
+        .small {
+            height: 50px;
+            width: 50px;
+            float: left;
+            margin: 5px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <!-- 顶部小按钮 -->
+        <div class="top">
+            <a href="#" title="列表模式" id="btn1" class="btn-list-off"></a>
+            <a href="#" title="卡片模式" id="btn2" class="btn-car-on"></a>
+        </div>
+        <!-- 列表详情区 -->
+        <ul>
+            <li>
+                <div class="con">
+                    <a class="a-img" href="#"><img src="images/big.jpg"></a>
+                    <p>
+                        <a href="#">测</a>
+                        <span>试</span>
+                        <span>数据1</span>
+                    </p>
+                </div>
+                <div class="bottom">
+                    测试数据1
+                </div>
+            </li>
+            <li>
+                <div class="con">
+                    <a class="a-img" href="#"><img src="images/big.jpg"></a>
+                    <p>
+                        <a href="#">测</a>
+                        <span>试</span>
+                        <span>数据2</span>
+                    </p>
+                </div>
+                <div class="bottom">
+                    测试数据2
+                </div>
+            </li>
+            <li>
+                <div class="con">
+                    <a class="a-img" href="#"><img src="images/big.jpg"></a>
+                    <p>
+                        <a href="#">测</a>
+                        <span>试</span>
+                        <span>数据3</span>
+                    </p>
+                </div>
+                <div class="bottom">
+                    测试数据3
+                </div>
+            </li>
+            <li>
+                <div class="con">
+                    <a class="a-img" href="#"><img src="images/big.jpg"></a>
+                    <p>
+                        <a href="#">测</a>
+                        <span>试</span>
+                        <span>数据4</span>
+                    </p>
+                </div>
+                <div class="bottom">
+                    测试数据4
+                </div>
+            </li>
+            <li>
+                <div class="con">
+                    <a class="a-img" href="#"><img src="images/big.jpg"></a>
+                    <p>
+                        <a href="#">测</a>
+                        <span>试</span>
+                        <span>数据5</span>
+                    </p>
+                </div>
+                <div class="bottom">
+                    测试数据5
+                </div>
+            </li>
+            <li>
+                <div class="con">
+                    <a class="a-img" href="#"><img src="images/big.jpg"></a>
+                    <p>
+                        <a href="#">测</a>
+                        <span>试</span>
+                        <span>数据6</span>
+                    </p>
+                </div>
+                <div class="bottom">
+                    测试数据6
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</body>
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+    $(window).on('load', function () {
+        var btn1 = $("#btn1");//列表模式按钮
+        var btn2 = $("#btn2");//卡片模式按钮
+
+        //列表模式按钮点击
+        $(btn1).on('click', function () {
+            $(this).attr('class', 'btn-list-on');
+            $(btn2).attr('class', 'btn-car-off');
+            //改变图片路径
+            $('img').each(function () {
+                $(this).attr('src', 'images/small.jpg');
+                $(this).parent().attr('class', 'a-img small');
+            });
+        });
+        //卡片模式按钮点击
+        $(btn2).on('click', function () {
+            $(this).attr('class', 'btn-car-on');
+            $(btn1).attr('class', 'btn-list-off');
+            //改变图片路径
+            $('img').each(function () {
+                $(this).attr('src', 'images/big.jpg');
+                $(this).parent().attr('class', 'a-img');
+            });
+        });
+    });
+</script>
+
+</html>
