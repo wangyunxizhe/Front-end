@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>JS速度动画</title>
+    <style type="text/css">
+        body,
+        div,
+        span {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            width: 200px;
+            height: 200px;
+            background: red;
+            position: relative;
+            left: -200px;
+            top: 0;
+        }
+
+        #div1 span {
+            width: 20px;
+            height: 50px;
+            background: blue;
+            position: absolute;
+            left: 200px;
+            top: 75px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div1"><span id="share">分享</span></div>
+</body>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var oDiv = document.getElementById('div1');
+        //鼠标移入div1时触发
+        oDiv.onmouseover = function () {
+            startMove(10, 0);//右移10，到距左0为止
+        }
+        //鼠标移出div1时触发
+        oDiv.onmouseout = function () {
+            startMove(-10, -200);//左移10，到距左-200为止
+        }
+    }
+
+    var timer = null;
+
+    function startMove(speed, iTarget) {
+        clearInterval(timer);//一进入方法就清除定时器：防止鼠标多次移入，重复触发定时器
+        var oDiv = document.getElementById('div1');
+        //设置定时器
+        timer = setInterval(function () {
+            if (oDiv.offsetLeft == iTarget) {
+                clearInterval(timer);
+            } else {
+                oDiv.style.left = oDiv.offsetLeft + speed + 'px';
+            }
+        }, 30);
+    }
+
+</script>
+
+</html>
