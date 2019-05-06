@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>JS多元素动画</title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        ul,
+        li {
+            list-style: none;
+        }
+
+        ul li {
+            width: 200px;
+            height: 100px;
+            line-height: 100px;
+            background: yellow;
+            margin-bottom: 20px;
+        }
+
+        div {
+            width: 200px;
+            height: 200px;
+            background: red;
+            margin: 10px;
+            float: left;
+            /* ie */
+            filter: alpha(opacity=30);
+            /* 火狐/谷歌 */
+            opacity: 0.3;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    =======================================================<br />
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</body>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var allLi = document.getElementsByTagName('li');
+        for (var i = 0; i < allLi.length; i++) {
+            allLi[i].timer = null;//为每个li定义一个定时器
+            allLi[i].onmouseover = function () {
+                startMove(this, 400);//鼠标移入当前li时触发：宽度变为400
+            }
+            allLi[i].onmouseout = function () {
+                startMove(this, 200);//宽度变回200
+            }
+        }
+
+        var allDiv = document.getElementsByTagName('div');
+        for (var i = 0; i < allDiv.length; i++) {
+            allDiv[i].timer = null;
+            allDiv[i].alpha = 30;
+            allDiv[i].onmouseover = function () {
+                startMoveDiv(this, 100);
+            }
+            allDiv[i].onmouseout = function () {
+                startMoveDiv(this, 30);
+            }
+        }
+    }
+
+    function startMove(obj, iTarget) {
+        clearInterval(obj.timer);//清除指定li的定时器
+        obj.timer = setInterval(function () {
+            var speed = (iTarget - obj.offsetWidth) / 8;
+            speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+            if (obj.offsetWidth == iTarget) {
+                clearInterval(obj.timer);
+            } else {
+                obj.style.width = obj.offsetWidth + speed + 'px';
+            }
+        }, 30);
+    }
+
+    //改变指定div透明度
+    function startMoveDiv(obj, iTarget) {
+        clearInterval(obj.timer);//清除指定div的定时器
+        obj.timer = setInterval(function () {
+            var speed = 0;
+            if (obj.alpha > iTarget) {
+                speed = -10;
+            } else {
+                speed = 10;
+            }
+            if (obj.alpha == iTarget) {
+                clearInterval(obj.timer);
+            } else {
+                obj.alpha += speed;
+                obj.style.filter = 'alpha(opacity=' + obj.alpha + ')';//ie
+                obj.style.opacity = obj.alpha / 100;
+            }
+        }, 30);
+    }
+</script>
+
+</html>
