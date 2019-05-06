@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>JS透明度动画</title>
+    <style type="text/css">
+        body,
+        div {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            width: 200px;
+            height: 200px;
+            background: red;
+            /* ie */
+            filter: alpha(opacity=30);
+            /* 火狐/谷歌 */
+            opacity: 0.3;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div1"></div>
+</body>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var oDiv = document.getElementById('div1');
+        //鼠标移入div1时触发：透明度变成100
+        oDiv.onmouseover = function () {
+            startMove(100);
+        }
+        //鼠标移出div1时触发：透明度变成30
+        oDiv.onmouseout = function () {
+            startMove(30);
+        }
+    }
+
+    var timer = null;
+    var alpha = 30;
+
+    function startMove(iTarget) {
+        var oDiv = document.getElementById('div1');
+        clearInterval(timer);//一进入方法就清除定时器：防止鼠标多次移入，重复触发定时器
+        timer = setInterval(function () {
+            var speed = 0;
+            if (alpha > iTarget) {
+                speed = -10;
+            } else {
+                speed = 10;
+            }
+            if (alpha == iTarget) {
+                clearInterval(timer);
+            } else {
+                alpha += speed;
+                oDiv.style.filter = 'alpha(opacity=' + alpha + ')';//ie
+                oDiv.style.opacity = alpha / 100;
+            }
+        }, 30);
+    }
+</script>
+
+</html>
