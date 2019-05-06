@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>JS获取样式注意事项</title>
+    <style type="text/css">
+        #div1 {
+            width: 200px;
+            height: 200px;
+            background: #F00;
+            /* 关键样式：border！！
+                在加上border之后，如果通过“offsetWidth”
+                oDiv.style.width = oDiv.offsetWidth - 1 + 'px'; 
+                这样设置宽度，经过测试div1的宽度不缩小，反而变大。
+                原因：offsetWidth的宽度将border的像素也加上了，造成了计算错误 */
+            border: 1px solid #000;
+            font-size: 12px;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div1">字体</div>
+</body>
+
+<script type="text/javascript">
+    window.onload = function () {
+        // var oDiv = document.getElementById('div1');
+        // alert(parseInt(getStyle(oDiv, 'width')));
+        startMove();
+    }
+
+    function startMove() {
+        //设置定时器：使div1宽度不断缩小
+        setInterval(function () {
+            var oDiv = document.getElementById('div1');
+            oDiv.style.width = parseInt(getStyle(oDiv, 'width')) - 1 + 'px';
+            oDiv.style.fontSize = parseInt(getStyle(oDiv, 'fontSize')) + 1 + 'px';
+        }, 30);
+    }
+
+    //获取样式属性值的方法，可以获取很多的属性值
+    function getStyle(obj, attr) {
+        if (obj.currentStyle) {//ie
+            return obj.currentStyle[attr];
+        } else {//火狐/其他
+            return getComputedStyle(obj, false)[attr];
+        }
+    }
+</script>
+
+</html>
