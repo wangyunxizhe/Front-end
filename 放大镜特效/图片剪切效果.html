@@ -1,0 +1,281 @@
+<html>
+
+<head>
+    <title>图片剪切效果</title>
+    <meta charset="utf-8">
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            background: #333;
+        }
+
+        #box {
+            position: absolute;
+            top: 100px;
+            left: 200px;
+            width: 550px;
+            height: 320px;
+        }
+
+        img {
+            z-index: 1
+        }
+
+        #img1 {
+            width: 550px;
+            height: 320px;
+            opacity: 0.7;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #img2 {
+            width: 550px;
+            height: 320px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            /*clip:rect(top,rigth,bottom,left); 按设置的坐标显示（4个都设置的话就是一个矩形）*/
+            clip: rect(0, 200px, 200px, 0);
+        }
+
+        /* 可拖拽，收缩的裁剪框的样式 */
+        #main {
+            position: absolute;
+            border: 1px solid yellowgreen;
+            width: 200px;
+            height: 200px;
+            cursor: move;
+            z-index: 2;
+        }
+
+        /* 裁剪框边角小方格的样式--start */
+        /* 裁剪框边角小方格的通用样式 */
+        .minDiv {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: yellowgreen;
+        }
+
+        .minDiv.left-up {
+            top: -4px;
+            left: -4px;
+            /* 鼠标变为拉伸样式 */
+            cursor: nw-resize;
+        }
+
+        .minDiv.left {
+            top: 50%;
+            margin-top: -4px;
+            left: -4px;
+            /* 鼠标变为拉伸样式 */
+            cursor: e-resize;
+        }
+
+        .minDiv.left-down {
+            bottom: -4px;
+            left: -4px;
+            /* 鼠标变为拉伸样式 */
+            cursor: sw-resize;
+        }
+
+        .minDiv.top {
+            top: -4px;
+            left: 50%;
+            margin-left: -4px;
+            /* 鼠标变为拉伸样式 */
+            cursor: n-resize;
+        }
+
+        .minDiv.right-up {
+            top: -4px;
+            right: -4px;
+            /* 鼠标变为拉伸样式 */
+            cursor: ne-resize;
+        }
+
+        .minDiv.right {
+            top: 50%;
+            margin-top: -4px;
+            right: -4px;
+            /* 鼠标变为拉伸样式 */
+            cursor: e-resize;
+        }
+
+        .minDiv.right-down {
+            bottom: -4px;
+            right: -4px;
+            /* 鼠标变为拉伸样式 */
+            cursor: se-resize;
+        }
+
+        .minDiv.bottom {
+            bottom: -4px;
+            left: 50%;
+            margin-left: -4px;
+            /* 鼠标变为拉伸样式 */
+            cursor: s-resize;
+        }
+
+        /* 裁剪框边角小方格的样式--end */
+
+        /* 预览图片样式 */
+        #preview,
+        #img3 {
+            position: absolute;
+            width: 550px;
+            height: 320px;
+            top: 50px;
+            left: 390px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <img src="arms.jpg" id="img1" />
+        <img src="arms.jpg" id="img2" />
+        <!-- 可拖拽，收缩的裁剪框 -->
+        <div id="main">
+            <div id="left-up" class="minDiv left-up"></div>
+            <div id="left" class="minDiv left"></div>
+            <div id="left-down" class="minDiv left-down"></div>
+            <div id="up" class="minDiv top"></div>
+            <div id="right-up" class="minDiv right-up"></div>
+            <div id="right" class="minDiv right"></div>
+            <div id="right-down" class="minDiv right-down"></div>
+            <div id="down" class="minDiv bottom"></div>
+        </div>
+    </div>
+    <!-- 右侧预览图片 -->
+    <div id="preview">
+        <img src="arms.jpg" id="img3" />
+    </div>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/jquery-ui-1.10.4.custom.min.js"></script>
+<script>
+    $(window).on('load', function () {
+        document.onselectstart = new Function('event.returnValue=false;');//禁止图片被选中状态（不然鼠标拖动时，会有蓝色框闪烁）
+        $("#main").draggable({ containment: 'parent', drag: setHighLigth });//引用拖动插件里的方法
+
+        var is_mouseDown = false;//鼠标按下状态
+        var contact = '';//用于记录被按下的触点
+        //为每个触点绑定鼠标按下事件
+        $('#main').find('div').each(function () {//遍历#main下的所有div
+            var contactId = $(this).attr('id');
+            $("#" + contactId).on('mousedown', function (event) {
+                event.stopPropagation();//阻止事件冒泡
+                is_mouseDown = true;
+                contact = contactId;
+            });
+        });
+        //鼠标松开事件
+        $(window).on('mouseup', function () {
+            is_mouseDown = false;
+        });
+        //鼠标移动事件
+        $(window).on('mousemove', function (event) {
+            if (is_mouseDown) {
+                switch (contact) {
+                    case "right": rightMove(event); break;
+                    case "up": upMove(event); break;
+                    case "left": leftMove(event); break;
+                    case "down": downMove(event); break;
+                    case "left-up": leftMove(event); upMove(event); break;
+                    case "right-up": rightMove(event); upMove(event); break;
+                    case "left-down": leftMove(event); downMove(event); break;
+                    case "right-down": rightMove(event); downMove(event); break;
+                }
+            }
+            setHighLigth();//裁剪区域高亮
+            preview();//预览区域显示
+        });
+    });
+
+    //获取元素相对屏幕左侧的距离（利用offsetLeft）
+    function getPosition(node) {
+        var left = node.offsetLeft;
+        var top = node.offsetTop;
+        var parent = node.offsetParent;//当前元素的父元素左边距
+        while (parent != null) {
+            left += parent.offsetLeft;
+            top += parent.offsetTop;
+            parent = parent.offsetParent;//如果当前元素还有父元素，则继续循环。直到取到屏幕为止
+        }
+        return { "left": left, "top": top };
+    }
+
+    //右拉伸
+    function rightMove(event) {
+        var x = event.clientX;//获取鼠标的X坐标
+        var widthBefore = $("#main").width() - 2;//“裁剪框”原来的宽度
+        var addWidth = x - getPosition(document.getElementById('main')).left - widthBefore;//鼠标拖动后“裁剪框”增加的宽度
+        var imgW = $('#img1').width();//图片宽度
+        if (addWidth + widthBefore <= imgW) {
+            $("#main").width(addWidth + widthBefore + 'px');//“裁剪框”变化后的宽度
+        }
+    }
+    //上拉伸
+    function upMove(event) {
+        var y = event.clientY;//获取鼠标的Y坐标
+        var heightBefore = $("#main").get(0).offsetHeight - 2;//“裁剪框”原来的高度
+        var addHeight = getPosition(document.getElementById('main')).top - y;//鼠标拖动后“裁剪框”增加的高度
+        if (addHeight + heightBefore > 0) {
+            $("#main").css({
+                'height': addHeight + heightBefore + 'px',//“裁剪框”变化后的高度
+                'top': $("#main").get(0).offsetTop - addHeight + 'px'//“裁剪框”变化后的距顶距离
+            });
+        }
+    }
+    //左拉伸
+    function leftMove(event) {
+        var x = event.clientX;//获取鼠标的X坐标
+        var widthBefore = $("#main").outerWidth() - 2;//“裁剪框”原来的宽度
+        var addWidth = getPosition(document.getElementById('main')).left - x;//鼠标拖动后“裁剪框”增加的宽度
+        $("#main").css({
+            'width': addWidth + widthBefore + 'px',//“裁剪框”变化后的宽度
+            'left': document.getElementById('main').offsetLeft - addWidth + 'px'//“裁剪框”变化后的距左距离
+        });
+    }
+    //下拉伸
+    function downMove(event) {
+        var y = event.clientY;//获取鼠标的Y坐标
+        var heightBefore = $("#main").get(0).offsetHeight - 2;//“裁剪框”原来的高度
+        var addHeight = y - heightBefore - getPosition(document.getElementById('main')).top;//鼠标拖动后“裁剪框”增加的高度
+        $("#main").height(addHeight + heightBefore + 'px');//“裁剪框”变化后的宽度
+    }
+
+    //设置被裁剪区域高亮
+    function setHighLigth() {
+        var top = $("#main").get(0).offsetTop;
+        var rigth = document.getElementById('main').offsetLeft + $("#main").outerWidth();
+        var bottom = $("#main").get(0).offsetTop + $("#main").get(0).offsetHeight;
+        var left = document.getElementById('main').offsetLeft;
+        $('#img2').css({
+            "clip": "rect(" + top + "px, " + rigth + "px, " + bottom + "px, " + left + "px)"
+        });
+    }
+
+    //预览方法
+    function preview() {
+        var top = $("#main").get(0).offsetTop;
+        var rigth = document.getElementById('main').offsetLeft + $("#main").outerWidth();
+        var bottom = $("#main").get(0).offsetTop + $("#main").get(0).offsetHeight;
+        var left = document.getElementById('main').offsetLeft;
+        $('#img3').css({
+            "top": "50px",
+            "left": "390px",
+            "clip": "rect(" + top + "px, " + rigth + "px, " + bottom + "px, " + left + "px)"
+        });
+    }
+</script>
+
+</html>
