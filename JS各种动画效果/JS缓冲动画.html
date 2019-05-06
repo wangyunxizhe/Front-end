@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>JS缓冲动画</title>
+    <style type="text/css">
+        body,
+        div,
+        span {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            width: 200px;
+            height: 200px;
+            background: red;
+            position: relative;
+            left: -200px;
+            top: 0;
+        }
+
+        #div1 span {
+            width: 20px;
+            height: 50px;
+            background: blue;
+            position: absolute;
+            left: 200px;
+            top: 75px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div1"><span id="share">分享</span></div>
+</body>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var oDiv = document.getElementById('div1');
+        //鼠标移入div1时触发
+        oDiv.onmouseover = function () {
+            startMove(0);
+        }
+        //鼠标移出div1时触发
+        oDiv.onmouseout = function () {
+            startMove(-200);
+        }
+    }
+
+    var timer = null;
+
+    function startMove(iTarget) {
+        clearInterval(timer);//一进入方法就清除定时器：防止鼠标多次移入，重复触发定时器
+        var oDiv = document.getElementById('div1');
+        //设置定时器
+        timer = setInterval(function () {
+            var speed = (iTarget - oDiv.offsetLeft) / 20;
+            speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);//速度大于0就向上取整，小于0就向下取整（注意：如果是计算速度一定要取整）
+            if (oDiv.offsetLeft == iTarget) {
+                clearInterval(timer);
+            } else {
+                oDiv.style.left = oDiv.offsetLeft + speed + 'px';
+            }
+        }, 30);
+    }
+
+</script>
+
+</html>
