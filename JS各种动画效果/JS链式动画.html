@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>JS链式动画</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul,
+        li {
+            list-style: none;
+        }
+
+        ul li {
+            width: 200px;
+            height: 100px;
+            background-color: yellow;
+            margin-bottom: 20px;
+            border: 4px solid #000;
+            filter: alpha(opacity=30);
+            opacity: 0.3;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li id="li1"></li>
+    </ul>
+</body>
+
+<!-- 引入封装好的通用运动框架 -->
+<script src="js/运动框架.js"> </script>
+<script>
+    window.onload = function () {
+        var Li = document.getElementById('li1');
+        //鼠标移入li1时触发
+        Li.onmouseover = function () {
+            startMove(Li, 'width', 400, function () {
+                startMove(Li, 'height', 200, function () {
+                    startMove(Li, 'opacity', 100);
+                });
+            });//将宽度增大到400，之后高度变为200，最后透明度变100
+        }
+        //鼠标移出li1时触发
+        Li.onmouseout = function () {
+            startMove(Li, 'opacity', 30, function () {
+                startMove(Li, 'height', 100, function () {
+                    startMove(Li, 'width', 200);
+                });
+            });//反向操作
+        }
+    }
+</script>
+
+</html>
