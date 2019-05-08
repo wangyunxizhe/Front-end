@@ -25,6 +25,8 @@ function startMove(obj, json, fn) {
             //3. 检测停止
             if (icur != json[attr]) { //不是所有的运动都到达终点
                 flag = false;
+            } else {
+                flag = true;
             }
             if (attr == 'opacity') { //需要动画效果的属性为“透明度”时
                 obj.style.filter = 'alpha(opacity:' + (icur + speed) + ')'; //IE浏览器 整数
