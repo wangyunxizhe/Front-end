@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery模拟JS运动框架的使用案例</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #move {
+            width: 300px;
+            border: 1px solid #ccc;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: #f4f4f4;
+            overflow: hidden;
+        }
+
+        #move a {
+            display: inline-block;
+            width: 58px;
+            height: 25px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            background-color: #fff;
+            text-align: center;
+            margin: 10px 17px;
+            position: relative;
+            padding-top: 40px;
+            color: #9c9c9c;
+            font-size: 12px;
+            text-decoration: none;
+            line-height: 25px;
+            overflow: hidden;
+        }
+
+        #move a i {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            display: inline-block;
+            width: 100%;
+            filter: alpha(opacity=100);
+            opacity: 1;
+        }
+
+        #move a p {
+            margin-top: 0px;
+        }
+
+        #move a:hover {
+            color: #F00;
+        }
+
+        #move img {
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="move">
+        <a href="#"><i><img src="imgs/2.jpg"></i>
+            <p>彩票</p>
+        </a>
+        <a href="#"><i><img src="imgs/3.jpg"></i>
+            <p>电影</p>
+        </a>
+        <a href="#"><i><img src="imgs/4.jpg"></i>
+            <p>游戏</p>
+        </a>
+        <a href="#"><i><img src="imgs/6.jpg"></i>
+            <p>缴费</p>
+        </a>
+        <a href="#"><i><img src="imgs/5.jpg"></i>
+            <p>理财</p>
+        </a>
+        <a href="#"><i><img src="imgs/1.jpg"></i>
+            <p>外卖</p>
+        </a>
+    </div>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"> </script>
+<script>
+    $(function () {
+        $("#move a").mouseenter(function () {
+            //300是动画速度
+            $(this).find('i').animate({ top: '-25px', opacity: '0' }, 300, function () {
+                $(this).css({ top: '30px' });
+                $(this).animate({ top: '20px', opacity: '1' }, 200);
+            });
+        });
+    });
+</script>
+
+</html>
