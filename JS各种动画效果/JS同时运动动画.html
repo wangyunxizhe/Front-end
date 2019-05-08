@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>JS同时运动动画</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul,
+        li {
+            list-style: none;
+        }
+
+        ul li {
+            width: 200px;
+            height: 100px;
+            background-color: yellow;
+            margin-bottom: 20px;
+            border: 4px solid #000;
+            filter: alpha(opacity=30);
+            opacity: 0.3;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li id="li1"></li>
+    </ul>
+</body>
+
+<!-- 引入封装好的同时运动框架 -->
+<script src="js/更完美的运动框架.js"> </script>
+<script>
+    window.onload = function () {
+        var Li = document.getElementById('li1');
+        //鼠标移入li1时触发
+        Li.onmouseover = function () {
+            startMove(Li, { 'width': 400, 'height': 200, 'opacity': 100 });//宽度->400，高度->200，透明度->100同时进行
+        }
+        //鼠标移出li1时触发
+        Li.onmouseout = function () {
+            startMove(Li, { 'width': 200, 'height': 100, 'opacity': 30 });
+        }
+    }
+</script>
+
+</html>
