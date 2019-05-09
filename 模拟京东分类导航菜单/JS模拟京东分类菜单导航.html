@@ -64,6 +64,10 @@
             box-shadow: 0 0 8px #DDD;
             /* 去除背景图片 */
             background-image: none;
+            /* 扩大高度，以便装下细节菜单 */
+            height: 60px;
+            /* 左侧加点缀 */
+            border-left: 4px solid #e4393c;
         }
 
         /* js来进行引用的大详情菜单样式 */
@@ -78,7 +82,7 @@
             display: inline-block;
             z-index: 20;
             width: 20px;
-            height: 30px;
+            height: 60px;
             float: right;
             /* position：相对于父元素li进行定位 */
             position: relative;
@@ -175,6 +179,27 @@
             color: #737373;
             font-weight: normal;
         }
+
+        /* 右侧推荐菜单样式--end */
+
+        .top li b {
+            display: none;
+        }
+
+        .top .lihover b {
+            display: block;
+            height: 30px;
+            line-height: 30px;
+            font-weight: normal;
+            font-size: 5pt;
+        }
+
+        /* 让图片有溢出效果 */
+        .rightPic {
+            position: relative;
+            right: -35px;
+            bottom: -20px;
+        }
     </style>
 </head>
 
@@ -184,6 +209,8 @@
         <li><a href="#">图书、音像、数字商品</a>
             <!-- 辅助：用于“无缝”的链接 左侧导航菜单 和 详情菜单 -->
             <span></span>
+            <!-- 细节标签 -->
+            <b><a href="#">GTA5</a> <a href="#">魔兽世界</a> <a href="#">Arms</a> </b>
             <!-- 展开后的大菜单 -->
             <div class="main">
                 <!-- 左侧二级分类区域 -->
@@ -234,6 +261,8 @@
                         <dd><a href="#">SONY</a></dd>
                         <dd><a href="#">Will</a></dd>
                     </dl>
+
+                    <img class="rightPic" src="xbox.png" />
                 </div>
             </div>
         </li>
@@ -247,7 +276,27 @@
         <li><a href="#">个护化妆</a></li>
         <li><a href="#">鞋靴、箱包、钟表、奢侈品</a></li>
         <li><a href="#">运动户外</a></li>
-        <li><a href="#">汽车用品</a></li>
+
+        <li><a href="#">汽车用品</a>
+            <!-- 辅助：用于“无缝”的链接 左侧导航菜单 和 详情菜单 -->
+            <span></span>
+            <!-- 展开后的大菜单 -->
+            <div class="main">
+                <!-- 左侧二级分类区域 -->
+                <div class="main_left">
+                    <dl>
+                        <dt>
+                            <a href="#">游戏</a>
+                        </dt>
+                        <dd>
+                            <a href="#">GTA5</a> <a href="#">魔兽世界</a> <a href="#">Arms</a> <a href="#">鬼武者</a>
+                            <a href="#">真三国无双</a> <a href="#">实况</a> <a href="#">2K系列</a>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </li>
+
         <li><a href="#">母婴、玩具乐器</a></li>
         <li><a href="#">食品饮料、酒类、生鲜</a></li>
         <li><a href="#">营养保健</a></li>
@@ -258,8 +307,21 @@
     window.onload = function () {
         var lis = document.getElementsByTagName('li');
         for (var i = 0; i < lis.length; i++) {
+            lis[i].i = i;//闭包
             lis[i].onmouseover = function () {
                 this.className = 'lihover';
+                //为了防止下标处于下方的li，由于详情菜单内容过少，显示的位置不能紧靠对应的li（详情菜单展示位置会比对应li高出很多）
+                var h0 = (this.i - 1) * 30 + 42;//一级菜单的距顶距离。30是每个li的高度，42是“全部商品分类”div的高度
+                var y = this.getElementsByTagName('div')[0].offsetHeight;//该li标签下的第一个div元素的自身高度
+                var h = this.getElementsByTagName('div')[0].style.top + y;//该li标签下的第一个div元素“底部”的距顶距离 = 该li标签下的第一个div元素的距顶距离 + y
+
+                if (h < h0) {
+                    this.getElementsByTagName('div')[0].style.top = h0 + 'px';
+                }
+                //为了防止详情菜单过长，下拉不方便，让详情菜单往页面顶部靠
+                if (y > 550) {
+                    this.getElementsByTagName('div')[0].style.top = '3px';
+                }
             }
             lis[i].onmouseout = function () {
                 this.className = '';
