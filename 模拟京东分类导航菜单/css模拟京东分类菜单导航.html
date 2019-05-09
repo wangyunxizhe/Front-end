@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>css模拟京东分类菜单导航</title>
+    <style type="text/css">
+        body {
+            padding: 0;
+            font-size: 10pt;
+        }
+
+        .top {
+            display: block;
+            width: 220px;
+            border: 1px solid #e4393c;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 顶部标题样式 */
+        .topTitle {
+            height: 40px;
+            line-height: 40px;
+            text-align: left;
+            font-size: 11pt;
+            font-weight: bold;
+            color: white;
+            background: #e4393c;
+            padding-left: 20px;
+        }
+
+        /* 导航标题样式 */
+        .top li {
+            height: 30px;
+            line-height: 30px;
+            font-size: 11pt;
+            list-style-type: none;
+            text-align: left;
+            padding-left: 8px;
+            background-image: url('1.jpg');
+            background-repeat: no-repeat;
+            background-position: right;
+            z-index: 1;
+        }
+
+        .top li a {
+            text-decoration: none;
+            color: #313131;
+        }
+
+        .top li a:hover {
+            text-decoration: underline;
+            font-weight: bold;
+            color: #e4393c;
+        }
+
+        /* 鼠标移入li标签时 */
+        .top li:hover {
+            border: 1px solid #DDD;
+            /* 右侧不需要边框 */
+            border-right: 0;
+            /* 加入阴影效果 */
+            box-shadow: 0 0 8px #DDD;
+            /* 去除背景图片 */
+            background-image: none;
+        }
+
+        /* 详情菜单 */
+        .main {
+            display: none;
+            width: 715px;
+            left: 220px;
+            position: absolute;
+            top: 40px;
+            border: 1px solid #DDD;
+            background-color: white;
+            box-shadow: 0 0 8px #DDD;
+            z-index: 2;
+        }
+
+        .main_left {
+            float: left;
+            width: 490px;
+            margin: 5px;
+        }
+
+        .main_rigth {
+            float: left;
+            width: 200px;
+            margin: 5px;
+        }
+
+        /* 鼠标移入li标签时，改变.main的样式 */
+        .top li:hover .main {
+            display: block;
+        }
+
+        .top li:hover span {
+            background-color: white;
+            /* 让span和a标签保持在一行 */
+            display: inline-block;
+            z-index: 20;
+            width: 20px;
+            height: 30px;
+            float: right;
+            /* position：相对于父元素li进行定位 */
+            position: relative;
+        }
+
+        /* 左侧二级分类区域样式--start */
+        .main_left dl {
+            display: block;
+            border-bottom: 1px solid #EEE;
+            padding-bottom: 6px;
+            overflow: hidden;
+        }
+
+        .main_left dl dt {
+            display: block;
+            float: left;
+            width: 60px;
+            text-align: right;
+            height: 22px;
+            line-height: 22px;
+            padding-right: 6px;
+        }
+
+        .main_left dl dt a {
+            color: #e4393c;
+            font-weight: bold;
+            text-decoration: underline;
+            font-size: 10pt;
+        }
+
+        .main_left dl dd {
+            display: block;
+            overflow: hidden;
+        }
+
+        .main_left dl dd a {
+            display: block;
+            float: left;
+            border-left: 1px solid #CCC;
+            color: #737373;
+            font-size: 9pt;
+            padding: 0 8px;
+            height: 14px;
+            line-height: 14px;
+            /* 让span和a标签保持在一行 */
+            margin: 4px 0;
+        }
+
+        /* 左侧二级分类区域样式--end */
+
+        /* 右侧推荐菜单样式--start */
+        .main_rigth dl dd {
+            margin: 3px 0;
+        }
+
+        .main_rigth dl dt {
+            color: #e4393c;
+            font-weight: bold;
+            font-size: 10pt;
+        }
+
+        .main_rigth dl dd a {
+            font-size: 9pt;
+            color: #737373;
+            line-height: 22px;
+        }
+
+        .main_rigth dl dd a:hover {
+            color: #737373;
+            font-weight: normal;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="top">
+        <div class="topTitle">全部商品分类</div>
+        <li><a href="#">图书、音像、数字商品</a>
+            <!-- 辅助：用于“无缝”的链接 左侧导航菜单 和 详情菜单 -->
+            <span></span>
+            <!-- 展开后的大菜单 -->
+            <div class="main">
+                <!-- 左侧二级分类区域 -->
+                <div class="main_left">
+                    <dl>
+                        <dt>
+                            <a href="#">游戏</a>
+                        </dt>
+                        <dd>
+                            <a href="#">GTA5</a> <a href="#">魔兽世界</a> <a href="#">Arms</a> <a href="#">鬼武者</a>
+                            <a href="#">真三国无双</a> <a href="#">实况</a> <a href="#">2K系列</a>
+                        </dd>
+                        <dt>
+                            <a href="#">电影</a>
+                        </dt>
+                        <dd>
+                            <a href="#">复仇者联盟</a> <a href="#">X战警</a> <a href="#">权力的游戏</a> <a href="#">流浪地球</a>
+                            <a href="#">迪士尼系列</a> <a href="#">哈利波特系列</a> <a href="#">指环王</a>
+                        </dd>
+                        <dt>
+                            <a href="#">汽车</a>
+                        </dt>
+                        <dd>
+                            <a href="#">阿斯顿马丁</a> <a href="#">柯尼塞格</a> <a href="#">法拉利</a> <a href="#">兰博基尼</a>
+                            <a href="#">迈凯伦</a>
+                        </dd>
+                        <dt>
+                            <a href="#">音乐</a>
+                        </dt>
+                        <dd>
+                            <a href="#">五月天</a> <a href="#">南拳妈妈</a> <a href="#">sum41</a> <a href="#">林肯公园</a>
+                            <a href="#">simple plane</a> <a href="#">pgone</a> <a href="#">吴亦凡</a>
+                        </dd>
+                    </dl>
+                </div>
+                <!-- 右侧推荐菜单 -->
+                <div class="main_rigth">
+                    <dl>
+                        <dd><a href="#"><img src="2.jpg" width="194" height="70" /></a></dd>
+                        <dd><a href="#"><img src="3.jpg" width="194" height="70" /></a></dd>
+                    </dl>
+                    <dl>
+                        <dt>推荐品牌</dt>
+                        <dd><a href="#">PS4</a></dd>
+                        <dd><a href="#">Swicth</a></dd>
+                        <dd><a href="#">XBOX</a></dd>
+                        <dd><a href="#">Apple</a></dd>
+                        <dd><a href="#">SONY</a></dd>
+                        <dd><a href="#">Will</a></dd>
+                    </dl>
+                </div>
+            </div>
+        </li>
+
+
+        <li><a href="#">家用电器</a></li>
+        <li><a href="#">手机、数码</a></li>
+        <li><a href="#">电脑、办公</a></li>
+        <li><a href="#">家居、家具、家装、厨具</a></li>
+        <li><a href="#">服饰内衣、珠宝首饰</a></li>
+        <li><a href="#">个护化妆</a></li>
+        <li><a href="#">鞋靴、箱包、钟表、奢侈品</a></li>
+        <li><a href="#">运动户外</a></li>
+        <li><a href="#">汽车用品</a></li>
+        <li><a href="#">母婴、玩具乐器</a></li>
+        <li><a href="#">食品饮料、酒类、生鲜</a></li>
+        <li><a href="#">营养保健</a></li>
+    </ul>
+</body>
+
+</html>
