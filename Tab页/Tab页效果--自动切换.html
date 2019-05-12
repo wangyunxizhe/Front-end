@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tab页效果--自动切换</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        #notice {
+            width: 298px;
+            height: 98px;
+            margin: 10px;
+            border: 1px solid #eee;
+            overflow: hidden;
+        }
+
+        .notice-title {
+            position: relative;
+            height: 27px;
+            background-color: #F7F7F7;
+        }
+
+        .notice-title ul {
+            position: absolute;
+            left: -1px;
+            width: 301px;
+
+        }
+
+        .notice-title li {
+            float: left;
+            width: 58px;
+            height: 26px;
+            /*26+1=27*/
+            line-height: 26px;
+            padding: 0 1px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            overflow: hidden;
+            background: gray;
+        }
+
+        .notice a:link,
+        .notice a:visited {
+            text-decoration: none;
+            color: black;
+        }
+
+        .notice a:hover {
+            color: orange;
+        }
+
+        .notice-title li.select {
+            border-bottom-color: #FFF;
+            border-left: 1px solid #eee;
+            border-right: 1px solid #eee;
+            background-color: #FFF;
+            padding: 0;
+            font-weight: bolder;
+        }
+
+        .notice-con .mod {
+            margin: 10px 6px;
+            display: none;
+        }
+
+        .notice-con .mod ul li {
+            float: left;
+            width: 143px;
+            height: 25px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="notice" class="notice">
+        <!-- 标签栏 -->
+        <div id="notice-title" class="notice-title">
+            <ul>
+                <li><a href="#">公告</a></li>
+                <li><a href="#">规则</a></li>
+                <li><a href="#">论坛</a></li>
+                <li><a href="#">安全</a></li>
+                <li><a href="#">公益</a></li>
+            </ul>
+        </div>
+        <!-- 内容栏 -->
+        <div id="notice-con" class="notice-con">
+            <div class="mod">
+                <ul>
+                    <li><a href="#">模拟公告内容1</a></li>
+                    <li><a href="#">模拟公告内容2</a></li>
+                </ul>
+            </div>
+            <div class="mod">
+                <ul>
+                    <li><a href="#">模拟规则内容1</a></li>
+                    <li><a href="#">模拟规则内容2</a></li>
+                </ul>
+            </div>
+            <div class="mod">
+                <ul>
+                    <li><a href="#">模拟论坛内容1</a></li>
+                    <li><a href="#">模拟论坛内容2</a></li>
+                </ul>
+            </div>
+            <div class="mod">
+                <ul>
+                    <li><a href="#">模拟安全内容1</a></li>
+                    <li><a href="#">模拟安全内容2</a></li>
+                </ul>
+            </div>
+            <div class="mod">
+                <ul>
+                    <li><a href="#">模拟公益内容1</a></li>
+                    <li><a href="#">模拟公益内容2</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var index = 0;//用于标识标题栏的索引
+        var timer = null;
+
+        var lis = $('#notice-title').find('li');
+        var divs = $('#notice-con').find('div');
+        //鼠标划过也可停止自动切换，显示当前标题
+        $(lis).each(function (i) {
+            $(this).attr('myid', i);
+            $(this).on('mouseover', function () {
+                clearInterval(timer);
+                index = change($(this).attr('myid'), lis, divs);
+            });
+            $(this).on('mouseout', function () {
+                timer = setInterval(function () {
+                    if (index >= lis.length) {
+                        index = 0;
+                    }
+                    change(index, lis, divs);
+                    index++;
+                }, 2000);
+            });
+        });
+        //如果有等待的定时器先清除，防止浪费资源造成卡顿
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+        timer = setInterval(function () {
+            if (index >= lis.length) {//到达最后一个标题时，切换回第一个
+                index = 0;
+            }
+            change(index, lis, divs);
+            //每2秒下标+1，以便达到不断切换标题的效果
+            index++;
+        }, 2000);
+    });
+
+    function change(cindex, lis, divs) {
+        $(lis).each(function (i) {
+            $(this).attr('class', '');
+            $(divs).eq(i).css('display', 'none');
+        });
+        $(lis).eq(cindex).attr('class', 'select');
+        $(divs).eq(cindex).css('display', 'block');
+        return cindex;
+    }
+
+</script>
+
+</html>
