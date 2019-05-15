@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>各种DOM事件测试</title>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <input type="button" id="btn1" value="按钮1" onclick="show()" /><br />
+        <input type="button" id="btn2" value="按钮2" /><br />
+        <input type="button" id="btn3" value="按钮3" /><br />
+        <input type="button" id="btn4" value="按钮4" onclick="showEvent(event)" /><br />
+        <a id="go" href="www.baidu.com">跳转</a>
+    </div>
+</body>
+
+<script type="text/javascript">
+    //一，html级别的事件绑定。缺点：方法名有变动时，需要改动html和js两处地方
+    function show() {
+        alert(1);
+    }
+
+    //二。DOM0级绑定事件
+    var btn2 = document.getElementById('btn2');
+    btn2.onclick = function () {
+        alert('通过DOM0级绑定的事件');
+    }
+    //DOM0级删除事件
+    btn2.onclick = null;
+
+    //三，DOM2级绑定事件
+    var btn3 = document.getElementById('btn3');
+    btn3.addEventListener('click', show, false);//参数：1--事件类型，2--具体方法，3--为了兼容各个浏览器
+    btn3.addEventListener('click', function () {//DOM0，DOM2可以给同一元素绑定多个事件，并按顺序执行
+        alert(this.value);
+    }, false);
+    //DOM2级删除事件，删除时参数要与添加时保持一致，而且通过DOM2添加的，必须通过DOM2删除
+    btn3.removeEventListener('click', show, false);
+
+    //四，IE不支持addEventListener，以及removeEventListener。有自己的绑定方法，如下：
+    if (btn3.attachEvent) {
+        btn3.attachEvent('onclick', show);//IE的绑定方法入参只有2个
+        btn3.detachEvent('onclick', show);//IE的删除绑定方法，参数与绑定时保持相同
+    }
+
+    //五，用以下方式封装可兼顾各种浏览器，实现跨浏览器添加/删除方法，获取事件对象，触发事件的元素，阻止事件默认行为，阻止事件冒泡的目的
+    var eventUtil = {
+        //添加句柄
+        addHandler: function (element, type, handler) {
+            if (element.addEventListener) {
+                element.addEventListener(type, handler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + type, handler);
+            } else {
+                element['on' + type] = handler;
+            }
+        },
+        //删除句柄
+        removeHandler: function (element, type, handler) {
+            if (element.removeEventListener) {
+                element.removeEventListener(type, handler, false);
+            } else if (element.detachEvent) {
+                element.detachEvent('on' + type, handler);
+            } else {
+                element['on' + type] = null;
+            }
+        },
+        //获取事件对象
+        getEvent: function (event) {
+            return event ? event : window.event;
+        },
+        //获取触发事件的元素
+        getELe: function (event) {
+            return event.target || event.srcElement;
+        },
+        //阻止事件默认行为
+        preventDefault: function (event) {
+            if (event.preventDefault) {
+                event.preventDefault();
+            } else {
+                event.returnValue = false;
+            }
+        },
+        //阻止事件冒泡
+        stopPropagation: function (event) {
+            if (event.stopPropagation) {
+                event.stopPropagation();
+            } else {
+                event.cancelBubble = true;
+            }
+        }
+    }
+    eventUtil.addHandler(btn3, 'click', show);
+    eventUtil.removeHandler(btn3, 'click', show);
+
+    //六，DOM中的Event
+    function showEvent(event) {
+        event = event || window.event;//IE之前的浏览器要用后者获取event
+        console.log(event.type);
+        var ele = event.target || event.srcElement;//IE要用后者获取事件元素
+        console.log(ele);
+        event.stopPropagation();//七：阻止事件冒泡，这样在点击子节点的click事件时，就不会同时也触发了父节点的click事件了
+    }
+
+    //七，事件冒泡
+    var box = document.getElementById('box');
+    function showBox() {
+        alert('这是放按钮的div');
+    }
+    eventUtil.addHandler(btn3, 'click', showEvent);//先给子节点btn3绑定一个click事件
+    // eventUtil.addHandler(box, 'click', showBox);//再给父节点绑定一个click事件
+
+    //八，取消标签事件的默认行为，以a标签为例
+    var go = document.getElementById('go');
+    function stopGo(event) {
+        event.stopPropagation();
+        event.preventDefault();//阻止事件的默认行为
+    }
+    // eventUtil.addHandler(go, 'click', stopGo);
+
+    //九，再次测试封装好的eventUtil
+    eventUtil.addHandler(box, 'click', function () {
+        alert('这里是box的弹出');
+    });
+
+    eventUtil.addHandler(go, 'click', function (e) {
+        e = eventUtil.getEvent(e);
+        alert(eventUtil.getELe(e));
+        eventUtil.preventDefault(e);//取消默认行为
+        eventUtil.stopPropagation(e);//取消事件冒泡
+    });
+</script>
+
+</html>
