@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>JS实现可调大小的面板</title>
+    <style type="text/css">
+        body {
+            margin: 0px;
+            padding: 50px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .panel {
+            width: 400px;
+            height: 240px;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+
+        .panel .title {
+            background-color: #eee;
+            text-align: center;
+            line-height: 30px;
+            border: 1px solid #fff;
+            font-weight: bold;
+        }
+
+        /* 右边可调节区域样式 */
+        .r {
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            width: 10px;
+            height: 100%;
+            /* 鼠标移入时造型变成指向“东边”的箭头（e代表east的缩写） */
+            cursor: e-resize;
+        }
+
+        /* 下边可调节区域样式 */
+        .b {
+            position: absolute;
+            right: 0px;
+            bottom: 0px;
+            width: 100%;
+            height: 10px;
+            cursor: s-resize;
+        }
+
+        /* 右下角可调节区域样式 */
+        .rb {
+            position: absolute;
+            right: 0px;
+            bottom: 0px;
+            width: 20px;
+            height: 20px;
+            cursor: se-resize;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel" id="MyPanel">
+        <div class="title">可调大小面板</div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    var m_panel, m_ctrl, m_type;//分别是：面板，控制元素，类型（r，b，rb）
+    var moving = 0;//不等于0时，表示面板正在拖拽中
+    var m_start_x = 0;//鼠标相对ctrl的left
+    var m_start_y = 0;//鼠标相对ctrl的top
+    var m_to_x = 0;//鼠标的新位置--left
+    var m_to_y = 0;//鼠标的新位置--top
+
+    //step2：让控制元素支持拖拽
+    function on_mousedown(e, panel, ctrl, type) {
+        var e = e || window.event;
+        //计算鼠标相对与“ctrl”元素的当前位置
+        m_start_x = e.pageX - ctrl.offsetLeft;
+        m_start_y = e.pageY - ctrl.offsetTop;
+
+        m_panel = panel;
+        m_ctrl = ctrl;
+        m_type = type;
+
+        //开始监听移动事件
+        moving = setInterval(on_move, 10);
+    }
+
+    //step3：根据控制元素的新位置，调整面板的大小
+    function on_move() {
+        if (moving) {//当moving不为0
+            var min_left = m_panel.offsetLeft;//左侧限制
+            var min_top = m_panel.offsetTop;//上侧限制
+
+            var to_x = m_to_x - m_start_x;
+            var to_y = m_to_y - m_start_y;
+
+            to_x = Math.max(to_x, min_left);
+            to_y = Math.max(to_y, min_top);
+
+            switch (m_type) {
+                case 'r':
+                    m_ctrl.style.left = to_x + 'px';
+                    m_panel.style.width = to_x + 10 + 'px';//重新设定面板宽度
+                    break;
+                case 'b':
+                    m_ctrl.style.top = to_y + 'px';
+                    m_panel.style.height = to_y + 10 + 'px';//重新设定面板高度
+                    break;
+                case 'rb':
+                    m_ctrl.style.left = to_x + 'px';
+                    m_ctrl.style.top = to_y + 'px';
+                    m_panel.style.width = to_x + 20 + 'px';//重新设定面板宽度
+                    m_panel.style.height = to_y + 20 + 'px';//重新设定面板高度
+                    break;
+            }
+        }
+    }
+
+    //处理鼠标在页面上移动的事件：计算出鼠标当前在页面上的位置，并赋值到全局变量中
+    document.onmousemove = function (e) {
+        var e = e || window.event;
+        m_to_x = e.pageX;
+        m_to_y = e.pageY;
+    }
+
+    //鼠标松开事件
+    document.onmouseup = function () {
+        clearInterval(moving);
+        moving = 0;
+        var cls = document.getElementsByClassName('ctrl');
+        for (var i = 0; i < cls.length; i++) {
+            cls[i].style.left = '';
+            cls[i].style.top = '';
+        }
+    }
+
+    //step1：为面板添加3个控制元素
+    function Resizable(panel_id) {
+        var panel = document.getElementById(panel_id);
+        var r = document.createElement('div');
+        var b = document.createElement('div');
+        var rb = document.createElement('div');
+
+        r.class = r.className = 'r ctrl';
+        b.class = b.className = 'b ctrl';
+        rb.class = rb.className = 'rb ctrl';
+
+        //为面板加入可调节区域元素，以达到面板可调大小的效果
+        panel.appendChild(r);
+        panel.appendChild(b);
+        panel.appendChild(rb);
+
+        //为控制元素设置拖拽处理
+        r.addEventListener('mousedown', function (e) {
+            on_mousedown(e, panel, r, 'r');
+        });
+        b.addEventListener('mousedown', function (e) {
+            on_mousedown(e, panel, b, 'b');
+        });
+        rb.addEventListener('mousedown', function (e) {
+            on_mousedown(e, panel, rb, 'rb');
+        });
+    }
+    Resizable('MyPanel');
+</script>
+
+</html>
