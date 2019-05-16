@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery带缓冲效果的小提示框</title>
+    <style type="text/css">
+        .move {
+            background: url('92.jpg') no-repeat 0 0;
+            width: 0;
+            height: 224px;
+            float: left;
+        }
+
+        .hide {
+            background: url('left_hover.png') no-repeat 0 0;
+            width: 100px;
+            height: 224px;
+            float: left;
+            display: none;
+        }
+
+        .show {
+            background: url('right_hover.png') no-repeat 0 0;
+            width: 100px;
+            height: 224px;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="move" id="move"></div>
+    <a href="javascrip:void(0);" class="hide" id="hide"></a>
+    <a href="javascrip:void(0);" class="show" id="show"></a>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#show').click(function () {
+            $(this).hide();
+            //jquery封装好的animate方法（自定义动画），参数分别为：要改变的属性值，改变速度，回调函数
+            $('#move').animate({ "width": 180 }, 500, function () {
+                $('#hide').show();
+            });
+        });
+
+        $('#hide').click(function () {
+            $(this).hide();
+            $('#move').animate({ "width": 0 }, 500, function () {
+                $('#show').show();
+            });
+        });
+
+    });
+</script>
+
+</html>
