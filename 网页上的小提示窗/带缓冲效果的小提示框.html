@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>带缓冲效果的小提示框</title>
+    <style type="text/css">
+        .move {
+            background: url('92.jpg') no-repeat 0 0;
+            width: 0;
+            height: 224px;
+            float: left;
+        }
+
+        .hide {
+            background: url('left_hover.png') no-repeat 0 0;
+            width: 100px;
+            height: 224px;
+            float: left;
+            display: none;
+        }
+
+        .show {
+            background: url('right_hover.png') no-repeat 0 0;
+            width: 100px;
+            height: 224px;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="move" id="move"></div>
+    <a href="javascrip:void(0);" class="hide" id="hide"></a>
+    <a href="javascrip:void(0);" class="show" id="show"></a>
+</body>
+
+<script src="js/更完美的运动框架.js"></script>
+<script type="text/javascript">
+    window.onload = function () {
+        var move = document.getElementById('move'),
+            hide = document.getElementById('hide'),
+            show = document.getElementById('show');
+
+        show.onclick = function () {
+            show.style.display = 'none';
+            startMove(move, { "width": 180 }, function () {
+                hide.style.display = 'block';
+            });
+        }
+        hide.onclick = function () {
+            hide.style.display = 'none';
+            startMove(move, { "width": 0 }, function () {
+                show.style.display = 'block';
+            });
+        }
+    }
+</script>
+
+</html>
