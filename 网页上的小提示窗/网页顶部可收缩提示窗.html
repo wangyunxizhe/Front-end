@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>网页顶部可收缩提示窗</title>
+    <style type="text/css">
+        body,
+        div,
+        img,
+        span {
+            margin: 0;
+            padding: 0;
+        }
+
+        #content {
+            width: 960px;
+            height: 1000px;
+            background: #ccc;
+            margin: 0 auto;
+        }
+
+        #ad {
+            width: 960px;
+            margin: 0 auto;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #close {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            background: #CF3;
+            top: 0;
+            right: 0;
+            display: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ad">
+        <img id="adcon" src="ad.png" width="960" height="385" />
+        <img id="adcur" src="cur.png" width="960" height="68" />
+        <span id="close">X</span>
+    </div>
+    <div id="content"><img src="数字商品-10-23.jpg" /></div>
+</body>
+
+<script type="text/javascript">
+    //全局变量
+    var $_ = function (id) {
+        return document.getElementById(id);
+    }
+    var maxH = $_('adcon').height;//最大高度
+    var minH = $_('adcur').height;//最小高度
+    var step = 5;//每次移动的距离
+    var h = 0;
+
+    /*广告向下展开*/
+    function adDown() {
+        if (h < maxH) {//小于可展开的最大值时（正好是大图片的高度）
+            h += step;
+            setTimeout(adDown, 1);//向下移动
+        } else {
+            setTimeout(adUp, 3000); 
+        }
+        $_('ad').style.display = "block";
+        $_('ad').style.height = h + "px";
+    }
+
+    /*广告向上收起*/
+    function adUp() {
+        $_('ad').style.height = h + "px";
+
+        if (h > minH) {
+            h -= step;
+            setTimeout(adUp, 1);
+        } else {
+            $_('adcon').style.display = "none";//将大图片隐藏
+            $_('close').style.display = "block";
+        }
+    }
+
+    $_('close').onclick = function () {
+        $_('ad').style.display = "none";
+    }
+    setTimeout(adDown, 3000);
+</script>
+
+</html>
