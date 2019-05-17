@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery实现的下拉菜单</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #menu {
+            background: #eee;
+            width: 600px;
+            height: 40px;
+            margin: 0 auto;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .li_one {
+            float: left;
+            line-height: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        a {
+            display: block;
+            text-decoration: none;
+            color: #000;
+            width: 90px;
+        }
+
+        a:hover {
+            color: #FFF;
+            background-color: #666;
+        }
+
+        ul li ul {
+            width: 90px;
+            position: absolute;
+            left: 0;
+            top: 40px;
+            display: none;
+        }
+
+        ul li ul li {
+            float: none;
+            background-color: #eee;
+            margin-top: 2px;
+            border-left: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="menu">
+        <ul>
+            <li class="li_one"><a href="#">塞尔达传说</a>
+                <ul>
+                    <li><a href="#">林克</a></li>
+                    <li><a href="#">白银人马</a></li>
+                </ul>
+            </li>
+            <li class="li_one"><a href="#">魔兽世界</a>
+                <ul>
+                    <li><a href="#">希尔瓦娜斯</a></li>
+                    <li><a href="#">萨尔</a></li>
+                </ul>
+            </li>
+            <li class="li_one"><a href="#">英雄联盟</a>
+                <ul>
+                    <li><a href="#">皇子</a></li>
+                    <li><a href="#">潘森</a></li>
+                </ul>
+            </li>
+            <li class="li_one"><a href="#">实况</a>
+                <ul>
+                    <li><a href="#">AC米兰</a></li>
+                    <li><a href="#">巴塞罗那</a></li>
+                </ul>
+            </li>
+            <li class="li_one"><a href="#">真三国无双</a>
+                <ul>
+                    <li><a href="#">赵云</a></li>
+                    <li><a href="#">诸葛亮</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.li_one').mouseover(function () {
+            $(this).children('ul').show();
+        });
+
+        $('.li_one').mouseout(function () {
+            $(this).children('ul').hide();
+        });
+
+    });
+</script>
+
+</html>
