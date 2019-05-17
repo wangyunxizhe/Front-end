@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>css实现的下拉菜单</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #nav {
+            background: #eee;
+            width: 600px;
+            height: 40px;
+            margin: 0 auto;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        ul li {
+            float: left;
+            line-height: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        a {
+            display: block;
+            text-decoration: none;
+            color: #000;
+            padding: 0 10px;
+            height: 40px;
+        }
+
+        a:hover {
+            color: #FFF;
+            background-color: #666;
+            display: block;
+        }
+
+        ul li ul {
+            position: absolute;
+            left: 0;
+            top: 40px;
+            display: none;
+        }
+
+        ul li ul li {
+            float: none;
+            background-color: #eee;
+            margin-top: 2px;
+        }
+
+        ul li ul li a {
+            width: 80px;
+        }
+
+        ul li ul li a:hover {
+            color: #06F;
+        }
+
+        ul li:hover ul {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="nav">
+        <ul>
+            <li><a href="#">塞尔达传说</a>
+                <ul>
+                    <li><a href="#">林克</a></li>
+                    <li><a href="#">白银人马</a></li>
+                </ul>
+            </li>
+            <li><a href="#">魔兽世界</a>
+                <ul>
+                    <li><a href="#">希尔瓦娜斯</a></li>
+                    <li><a href="#">萨尔</a></li>
+                </ul>
+            </li>
+            <li><a href="#">英雄联盟</a>
+                <ul>
+                    <li><a href="#">皇子</a></li>
+                    <li><a href="#">潘森</a></li>
+                </ul>
+            </li>
+            <li><a href="#">实况</a>
+                <ul>
+                    <li><a href="#">AC米兰</a></li>
+                    <li><a href="#">巴塞罗那</a></li>
+                </ul>
+            </li>
+            <li><a href="#">真三国无双</a>
+                <ul>
+                    <li><a href="#">赵云</a></li>
+                    <li><a href="#">诸葛亮</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+</script>
+
+</html>
