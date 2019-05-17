@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>css变幻多级菜单</title>
+    <style type="text/css">
+        .top-nav {
+            font-size: 12px;
+            font-weight: bold;
+            list-style: none;
+            overflow: hidden;
+        }
+
+        .top-nav li {
+            float: left;
+            margin-right: 1px;
+        }
+
+        .top-nav li a {
+            line-height: 20px;
+            text-decoration: none;
+            background-color: #DDD;
+            color: #666666;
+            display: block;
+            width: 80px;
+            text-align: center;
+        }
+
+        .top-nav li a span {
+            display: none;
+        }
+
+        .top-nav li .a_one:hover span {
+            display: block;
+            background-color: #DC4E1B;
+            color: white;
+        }
+
+        .top-nav li .a_one:hover {
+            margin-top: -20px;
+        }
+
+        .top-nav li a:hover {
+            background: #900;
+            color: white;
+        }
+
+        .top-nav li ul {
+            display: none;
+            list-style: none;
+            padding: 0;
+            position: relative;
+        }
+
+        /* 显示2级菜单 */
+        .top-nav li:hover ul {
+            display: block;
+            width: 80px;
+        }
+
+        .top-nav li:hover ul li ul {
+            display: none;
+        }
+
+        /* 显示3级菜单 */
+        .top-nav li ul li:hover ul {
+            display: block;
+            top: 0px;
+            left: 80px;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="top-nav">
+        <li><a class="a_one" href="http://www.baidu.com">塞尔达传说<span>ZELDA</span></a></li>
+        <li><a class="a_one" href="http://www.baidu.com">魔兽世界+<span>WoW+</span></a>
+            <ul>
+                <li><a href="#">幽暗城+</a>
+                    <ul>
+                        <li><a href="#">阿尔萨斯</a></li>
+                        <li><a href="#">希尔瓦娜斯</a></li>
+                        <li><a href="#">恐惧魔王</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">奥格瑞玛+</a>
+                    <ul>
+                        <li><a href="#">拍卖行</a></li>
+                        <li><a href="#">银行</a></li>
+                        <li><a href="#">战场</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">雷霆崖</a></li>
+            </ul>
+        </li>
+        <li><a class="a_one" href="http://www.baidu.com">英雄联盟+<span>LOL+</span></a>
+            <ul>
+                <li><a href="#">德玛西亚+</a>
+                    <ul>
+                        <li><a href="#">皇子</a></li>
+                        <li><a href="#">赵信</a></li>
+                        <li><a href="#">潘森</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">诺克萨斯+</a>
+                    <ul>
+                        <li><a href="#">卡特琳娜</a></li>
+                        <li><a href="#">赏金猎人</a></li>
+                        <li><a href="#">蛇女</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">雷霆崖</a></li>
+            </ul>
+        </li>
+        <li><a class="a_one" href="http://www.baidu.com">实况<span>PES</span></a></li>
+    </ul>
+</body>
+
+</html>
