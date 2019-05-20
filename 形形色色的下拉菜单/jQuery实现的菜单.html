@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery实现的菜单</title>
+    <style type="text/css">
+        .top-nav {
+            font-size: 12px;
+            font-weight: bold;
+            list-style: none;
+            overflow: hidden;
+        }
+
+        /* 一级菜单样式 */
+        .top-nav li {
+            float: left;
+            margin-right: 1px;
+        }
+
+        /* 一级菜单链接样式 */
+        .top-nav li a {
+            line-height: 34px;
+            text-decoration: none;
+            background-color: #3f240e;
+            color: #fff;
+            display: block;
+            width: 80px;
+            text-align: center;
+        }
+
+        /* 二级菜单样式 */
+        .top-nav li ul {
+            display: none;
+            list-style: none;
+            padding: 0;
+            position: absolute;
+        }
+
+        .top-nav li a:hover {
+            background: url('images/slide-pannel_14.png') 0 0 repeat-x;
+        }
+
+        .note {
+            color: #3f240e;
+            /* 若不以块级显示，将只会把span中的文字颜色改变 */
+            display: block;
+            background: url('images/slide-pannel_14.png') 0 0 repeat-x;
+        }
+
+        .corn {
+            display: block;
+            height: 11px;
+            background: url('images/bird.png') 31px 0 no-repeat;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="top-nav">
+        <li><a href="#"><span class="note">塞尔达传说</span></a></li>
+        <li><a href="#">魔兽世界+</a>
+            <ul>
+                <!-- span用来做“小箭头” -->
+                <span class="corn"></span>
+                <li><a href="#">幽暗城</a></li>
+                <li><a href="#">奥格瑞玛</a></li>
+                <li><a href="#">雷霆崖</a></li>
+            </ul>
+        </li>
+        <li><a href="#">英雄联盟+</a>
+            <ul>
+                <!-- span用来做“小箭头” -->
+                <span class="corn"></span>
+                <li><a href="#">德玛西亚</a></li>
+                <li><a href="#">诺克萨斯</a></li>
+            </ul>
+        </li>
+        <li><a href="#">实况<span>PES</span></a></li>
+    </ul>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.top-nav li').mousemove(function () {
+            //slideDown(毫秒)：让指定元素按指定速度展开。相比而言animate()更新
+            $(this).find('ul').slideDown(1000);
+        });
+
+        $('.top-nav li').mouseleave(function () {
+            $(this).find('ul').slideUp('slow');
+        });
+    });
+</script>
+
+</html>
