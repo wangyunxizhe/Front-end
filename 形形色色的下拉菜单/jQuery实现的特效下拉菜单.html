@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery实现的特效下拉菜单</title>
+    <style type="text/css">
+        .navlist {
+            position: absolute;
+            top: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .navlist a {
+            margin-left: 60px;
+            color: #666;
+        }
+
+        .expand {
+            height: 0px;
+            background-color: #333d4d;
+            overflow: hidden;
+            position: relative;
+            top: 30px;
+            width: 100%;
+        }
+
+        .expdiv {
+            height: 130px;
+            width: 500%;
+        }
+
+        .expdiv-list {
+            /* .expdiv宽度是500%，子元素这里定义500%的20%，也就是100% */
+            width: 20%;
+            text-align: center;
+            float: left;
+            line-height: 110px;
+            color: white;
+        }
+
+        .expand .close-btn {
+            width: 120px;
+            height: 20px;
+            background: url('images/broswer_home.png') no-repeat -13px -117px;
+            position: absolute;
+            left: 50%;
+            bottom: -2px;
+            margin-left: -60px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 一级菜单 -->
+    <div id="menuList" class="navlist">
+        <a href="#">塞尔达传说</a>
+        <a href="#">魔兽世界</a>
+        <a href="#">英雄联盟</a>
+        <a href="#">实况</a>
+        <a href="#">怪物猎人</a>
+    </div>
+    <!-- 二级菜单 -->
+    <div id="expandZone" class="expand">
+        <div class="expdiv">
+            <div class="expdiv-list">
+                <a href="#">海拉鲁王国</a>
+            </div>
+            <div class="expdiv-list">
+                <a href="#">幽暗城</a>
+                <a href="#">奥格瑞玛</a>
+                <a href="#">雷霆崖</a>
+            </div>
+            <div class="expdiv-list">
+                <a href="#">德玛西亚</a>
+                <a href="#">诺克萨斯</a>
+            </div>
+            <div class="expdiv-list">
+                <a href="#">AC米兰</a>
+                <a href="#">皇家马德里</a>
+                <a href="#">巴塞罗那</a>
+            </div>
+            <div class="expdiv-list">
+                <a href="#">大怪鸟</a>
+                <a href="#">雄火龙</a>
+                <a href="#">勇气太刀</a>
+            </div>
+        </div>
+        <!-- 二级菜单关闭按钮 -->
+        <div id="closeBtn" class="close-btn"></div>
+    </div>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //on第二个的参数a表示，点击#menuList下的a标签时，执行函数
+        $('#menuList').on('click', 'a', function () {
+            //再次点击相同a标签时，也可以收起
+            if ($(this).hasClass('btn-active')) {
+                $('#expandZone #closeBtn').click();
+                return false;
+            }
+
+            var curIndex = $(this).index();//标识点击的是#menuList下的第几个a标签
+            var mlVal = '-' + curIndex * 100 + '%';//该a标签的margin-left
+
+            //动画展开/切换效果
+            if ($('#expandZone').hasClass('active')) {//已经展开
+                $('#expandZone .expdiv').animate({ marginLeft: mlVal })
+            } else {
+                $('#expandZone .expdiv').css({ marginLeft: mlVal });
+                $('#expandZone').animate({ height: '130px' }).addClass('active');//追加一个class方便识别现在二级菜单是否展开
+            }
+
+            //siblings()：兄弟元素。给当前a标签添加class“btn-active”，同时去除兄弟元素的“btn-active”
+            $(this).addClass('btn-active').siblings().removeClass('btn-active');
+            return false;
+        });
+
+        //二级菜单关闭按钮
+        $('#expandZone #closeBtn').on('click', function () {
+            $('#expandZone').animate({ height: '0px' }, function () {
+                $(this).removeClass('active');
+                $('#menuList .btn-active').removeClass('btn-active');
+            });
+            return false;
+        });
+    });
+</script>
+
+</html>
