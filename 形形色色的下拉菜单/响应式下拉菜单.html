@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>响应式下拉菜单</title>
+    <style type="text/css">
+        body {
+            margin: 0 auto;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            padding: 0 3px;
+            display: block;
+        }
+
+        .menu li {
+            display: block;
+            float: left;
+            margin: 3px;
+            background-color: gray;
+            width: 140px;
+            text-align: center;
+            color: white;
+            font-size: 9pt;
+        }
+
+        #logo {
+            background-color: white;
+            width: 230px;
+        }
+
+        #logo a {
+            color: gray;
+            font-size: 35pt;
+            background-color: white;
+        }
+
+        #toplogo {
+            display: none;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #toplogo a {
+            color: black;
+            font-size: 35pt;
+        }
+
+        .rMenu {
+            display: none;
+        }
+
+        /* “屏幕”宽度在585-823px之间的时候，执行下面的css样式 */
+        @media only screen and (min-width:585px) and (max-width:823px) {
+            #logo {
+                display: none;
+            }
+
+            #toplogo {
+                display: block;
+                width: 100%;
+            }
+
+            .menu {
+                width: 585px;
+            }
+        }
+
+        /* “屏幕”宽度在585px以下的时候（一般针对手机屏幕），执行下面的css样式 */
+        @media only screen and (max-width:585px) {
+            #logo {
+                display: none;
+            }
+
+            #toplogo {
+                display: block;
+            }
+
+            .menu {
+                width: 100%;
+            }
+
+            .menu li {
+                width: 100%;
+            }
+
+            .rMenu {
+                display: block;
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="menu">
+        <div id="toplogo">
+            <a href="#">热门游戏</a>
+            <a href="#" id="rList" class="rMenu"><img src="images/bird.png" /></a>
+        </div>
+        <li><a href="#">塞尔达传说</a><br />NS独占</li>
+        <li><a href="#">魔兽世界</a><br />网游传奇</li>
+        <li id="logo"><a href="#">热门游戏</a></li>
+        <li><a href="#">实况</a><br />PS独占</li>
+        <li><a href="#">怪物猎人</a><br />CAPCOM得意之作</li>
+    </ul>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //小屏幕时，针对按钮绑定点击事件
+        $('#rList').on('click', function () {
+            if ($('ul li').hasClass('active')) {
+                $('ul li').css("visibility", "hidden").removeClass('active');
+            } else {
+                $('ul li').css("visibility", "visible").addClass('active');
+            }
+        });
+    });
+</script>
+
+</html>
