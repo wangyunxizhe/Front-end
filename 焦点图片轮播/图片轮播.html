@@ -130,7 +130,7 @@
 
             //移动效果（含滑动动画）
             function moveLeft(offset) {
-                var is_finish = true;
+                is_finish = true;
                 var newLeft = parseInt($(list).css('left')) + offset; //以当前距左的距离加上传入的向左偏移量，赋值新的距左距离
                 var time = 300; //位移总时间
                 var interval = 10; //位移间隔时间
@@ -169,26 +169,28 @@
 
             //点击右箭头
             $(next).bind('click', function () {
-                if (index == 5) { //说明刚好移到了第5张
-                    index = 1;
-                } else {
-                    index += 1;
-                }
-                showButton();
-                if (!is_finish) { //已经完成滑动效果
+                if (!is_finish) {
+                    if (index == 5) { //说明刚好移到了第5张
+                        index = 1;
+                    } else {
+                        index += 1;
+                    }
+                    showButton();
+                    //已经完成滑动效果
                     moveLeft(-600); //list往左再移600px（单张图片的宽度是600px）
                 }
             });
 
             //点击左箭头
             $(prev).bind('click', function () {
-                if (index == 1) { //说明刚好移到了第1张
-                    index = 5;
-                } else {
-                    index -= 1;
-                }
-                showButton();
-                if (!is_finish) { //已经完成滑动效果
+                if (!is_finish) {
+                    if (index == 1) { //说明刚好移到了第1张
+                        index = 5;
+                    } else {
+                        index -= 1;
+                    }
+                    showButton();
+                    //已经完成滑动效果
                     moveLeft(600); //list往右再移600px（单张图片的宽度是600px）
                 }
             });
@@ -210,11 +212,12 @@
                     if ($(this).attr('class') == 'on') {
                         return;
                     }
-                    var spanIndex = $(this).attr('index'); //获取当前点击的小圆点的index属性值
-                    var offset = -600 * (spanIndex - index); //计算出该小圆点对应图片的距左距离
-                    index = spanIndex; //将index变量值更新，以免下次计算值出错
-                    showButton();
-                    if (!is_finish) { //已经完成滑动效果
+                    if (!is_finish) {
+                        var spanIndex = $(this).attr('index'); //获取当前点击的小圆点的index属性值
+                        var offset = -600 * (spanIndex - index); //计算出该小圆点对应图片的距左距离
+                        index = spanIndex; //将index变量值更新，以免下次计算值出错
+                        showButton();
+                        //已经完成滑动效果
                         moveLeft(offset);
                     }
                 });
