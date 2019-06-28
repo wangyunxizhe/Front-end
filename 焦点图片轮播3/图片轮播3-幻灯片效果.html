@@ -40,8 +40,9 @@
             width: 100%;
             position: absolute;
             left: 0;
-            top: 0;
+            top: 50%;
             z-index: 1;
+            height: 400px;
         }
 
         .slider .main .main-i .caption {
@@ -61,7 +62,7 @@
         .slider .main .main-i .caption h3 {
             font-size: 70px;
             line-height: 70px;
-            color: #000000;
+            color: #3d6fdb;
             text-align: right;
             font-family: 'Open Sans Condensed';
         }
@@ -113,6 +114,7 @@
                 color-stop(50%, transparent),
                 to(rgba(255, 255, 255, .3)));
             opacity: 1;
+            z-index: 3;
         }
 
         /* 当前展示的控制按钮样式 */
@@ -132,6 +134,11 @@
             right: 50%;
             top: 0;
             -webkit-transition: all .5s;
+            z-index: 2;
+        }
+
+        .slider .main .main-i_right {
+            right: -50%;
         }
 
         .slider .main .main-i h2 {
@@ -144,18 +151,30 @@
 
         .slider .main .main-i h2,
         .slider .main .main-i h3 {
+            opacity: 0;
             /* 最后一个参数的意思是延迟1秒，执行动画效果 */
             -webkit-transition: all 1.5s 1s;
         }
 
+        #main_background,
         .slider .main .main-i_active {
             opacity: 1;
             right: 0;
+            z-index: 2;
         }
 
         .slider .main .main-i_active h2,
         .slider .main .main-i_active h3 {
             margin-right: 0px;
+            opacity: 1;
+        }
+
+        .slider .main .main-i .caption {
+            margin-right: 13%;
+        }
+
+        #main_background {
+            z-index: 1;
         }
     </style>
 </head>
@@ -165,12 +184,12 @@
         <!-- 脚本控制切换的第一步：修改view->template（关键字替换），增加具有标识性的template id。注意：所有{{XXX}}都是view->template过程中需要被js代码替换掉的 -->
         <!-- 放置所有的幻灯片 -->
         <div class="main" id="template_main">
-            <div class="main-i">
+            <div class="main-i {{css}}" id="main_{{index}}">
                 <div class="caption">
                     <h2>{{h2}}</h2>
                     <h3>{{h3}}</h3>
                 </div>
-                <img src="img/{{index}}.jpg" />
+                <img src="img/{{index}}.jpg" class="picture" />
             </div>
         </div>
         <!-- 放置所有的控制按钮 -->
@@ -185,29 +204,92 @@
 <script type="text/javascript">
     //假数据
     var data = [
-        { img: 1, h1: '航空母舰', h2: '海上堡垒' },
-        { img: 2, h1: '变形金刚', h2: '擎天柱' },
-        { img: 3, h1: '新世纪福音战士', h2: '明日香' },
-        { img: 4, h1: '犬夜叉', h2: '人妖' },
-        { img: 5, h1: '海贼王', h2: '路飞' },
-        { img: 6, h1: '伏见稻荷神社', h2: '千门鸟居' },
-        { img: 7, h1: '迈凯伦', h2: 'P1' }
+        { img: 1, h2: '航空母舰', h3: '海上堡垒' },
+        { img: 2, h2: '变形金刚', h3: '擎天柱' },
+        { img: 3, h2: '新世纪福音战士', h3: '明日香' },
+        { img: 4, h2: '犬夜叉', h3: '人妖' },
+        { img: 5, h2: '海贼王', h3: '路飞' },
+        { img: 6, h2: '伏见稻荷神社', h3: '千门鸟居' },
+        { img: 7, h2: '迈凯伦', h3: 'P1' }
     ];
+
     //第2步：通用函数
     function g(id) {
-        if (id.strsbu(0, 1) == '.') {
-            return document.getElementsByClassName(id.strsbu(1));
+        if (id.substr(0, 1) == '.') {
+            return document.getElementsByClassName(id.substr(1));
         }
         return document.getElementById(id);
     }
+
     //第3步：添加所有幻灯片和他们对应的按钮
     function addSliders() {
-        //获取模板
-        var tpl_main = g('template_main').innerHTML.replace(/^\s*/, '');
+        //获取模板的html，并去除开头，结尾的空白符
+        var tpl_main = g('template_main').innerHTML.replace(/^\s*/, '').replace(/\s*$/, '');
+        //获取控制按钮的html，并去除开头，结尾的空白符
+        var tpl_ctrl = g('template_ctrl').innerHTML.replace(/^\s*/, '').replace(/\s*$/, '');
+        //分别定义两个变量最终需要输出的HTML的格式
+        var out_main = [];
+        var out_ctrl = [];
+        //遍历所有数据，构建最终需要展示的HTML
+        for (i in data) {
+            //全局替换{{XXX}}
+            var _html_main = tpl_main.replace(/{{index}}/g, data[i].img)
+                .replace(/{{h2}}/g, data[i].h2)
+                .replace(/{{h3}}/g, data[i].h3)
+                .replace(/{{css}}/g, ['', 'main-i_right'][i % 2]);//最后一个参数是为了让幻灯片切换时，可以从不同方向切入，效果更好看。{{index}}是偶数时-》main-i_right，奇数就是''
+            var _html_ctrl = tpl_ctrl.replace(/{{index}}/g, data[i].img);
+            out_main.push(_html_main);
+            out_ctrl.push(_html_ctrl);
+        }
+        //回写到页面中
+        g('template_main').innerHTML = out_main.join('');
+        g('template_ctrl').innerHTML = out_ctrl.join('');
+
+        //第7.1步：增加#main_background的HTML元素，当作背景使用，防止幻灯片在切换时，页面右侧出现留白
+        g('template_main').innerHTML += tpl_main.replace(/{{index}}/g, '{{index}}')
+            .replace(/{{h2}}/g, data[i].h2)
+            .replace(/{{h3}}/g, data[i].h3);
+        g('main_{{index}}').id = 'main_background';
     }
+
+    //第5步：幻灯片切换。参数n就是{{index}}替换后的数字
+    function switchSlider(n) {
+        //获得要展示的幻灯片以及它对应的控制按钮
+        var main = g('main_' + n);
+        var ctrl = g('ctrl_' + n);
+        //获得所有的幻灯片以及它对应的控制按钮
+        var clean_main = g('.main-i');
+        var clean_ctrl = g('.ctrl-i');
+        //先清除他们的“选中”样式
+        for (var i = 0; i < clean_ctrl.length; i++) {
+            clean_main[i].className = clean_main[i].className.replace(' main-i_active', '');
+            clean_ctrl[i].className = clean_ctrl[i].className.replace(' ctrl-i_active', '');
+        }
+        main.className += " main-i_active";
+        ctrl.className += " ctrl-i_active";
+
+        //第7.2步：切换时，复制上一张幻灯片到#main_background中作背景
+        setTimeout(function () {
+            g('main_background').innerHTML = main.innerHTML;
+        }, 1000);
+    }
+
+    //第6步：动态调整图片的margin-top，以便使其垂直居中
+    function moveImgs() {
+        var imgs = g('.picture');
+        for (var i = 0; i < imgs.length; i++) {
+            imgs[i].style.marginTop = (-1 * imgs[i].clientHeight / 2) + 'px';
+        }
+    }
+
     //第4步：定义何时加载幻灯片
     window.onload = function () {
         addSliders();
+        switchSlider(1);
+        //防止addSliders()方法图片还没动态添加完，就执行moveImgs()，造成获取不到图片
+        setTimeout(function () {
+            moveImgs();
+        }, 100);
     }
 </script>
 
