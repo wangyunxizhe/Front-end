@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>连续动画效果</title>
+    <style>
+        /*自定义动画样式*/
+        /*抖动*/
+        @-webkit-keyframes rock {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            10% {
+                transform: rotate(3deg)
+            }
+
+            20% {
+                transform: rotate(-3deg)
+            }
+
+            30% {
+                transform: rotate(2deg)
+            }
+
+            40% {
+                transform: rotate(-2deg)
+            }
+
+            50% {
+                transform: rotate(1deg)
+            }
+
+            60% {
+                transform: rotate(-1deg)
+            }
+
+            70% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(0deg)
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #000;
+            min-width: 1200px;
+            min-height: 600px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            /* 字体抗锯齿 */
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .main {
+            width: 1200px;
+            height: 600px;
+            background: #000 url('img/bg.jpg');
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -600px;
+            margin-top: -300px;
+            overflow: hidden;
+        }
+
+        /*所有的内部元件都在这里面*/
+        .c_zongzi_box {
+            width: 312px;
+            height: 305px;
+            position: absolute;
+            left: 700px;
+            top: 184px;
+        }
+
+        .c_zongzi_box_rock {
+            /*第3个参数的意思是：无限制。效果就是会让粽子一直抖*/
+            -webkit-animation: rock 2s infinite;
+        }
+
+        /*粽子*/
+        .c_zongzi {
+            width: 312px;
+            height: 305px;
+            background: url('img/zz.png');
+            opacity: 1;
+            transition: all 1s;
+        }
+
+        .c_zongzi_out {
+            opacity: 0;
+            transform: scale(.5);
+        }
+
+        /*绳子1*/
+        .c_shengzi_1 {
+            width: 218px;
+            height: 180px;
+            background: url('img/line_1.png');
+            position: absolute;
+            /*让绳子飘到粽子上去*/
+            left: 10px;
+            top: 120px;
+            z-index: 999;
+            cursor: pointer;
+        }
+
+        /*绳子2*/
+        .c_shengzi_2 {
+            width: 219px;
+            height: 159px;
+            background: url('img/line_2.png');
+            position: absolute;
+            /*让绳子飘到粽子上去*/
+            left: 10px;
+            top: 158px;
+        }
+
+        /*绳子3*/
+        .c_shengzi_3 {
+            width: 264px;
+            height: 117px;
+            background: url('img/line_3.png');
+            position: absolute;
+            /*让绳子飘到粽子上去*/
+            left: 10px;
+            top: 220px;
+        }
+
+        /*绳子4*/
+        .c_shengzi_4 {
+            width: 288px;
+            height: 56px;
+            background: url('img/line_4.png');
+            position: absolute;
+            /*让绳子飘到粽子上去*/
+            left: 10px;
+            top: 290px;
+        }
+
+        /*绳子0*/
+        .c_shengzi_0 {
+            display: none;
+        }
+
+        /*粽子肉*/
+        .c_zongzirou {
+            width: 288px;
+            height: 206px;
+            background: url('img/zzr_1.png');
+            background-size: 288px 206px;
+            position: absolute;
+            left: 50px;
+            top: 54px;
+            z-index: 110;
+            opacity: 0;
+            transform-origin: center center;
+            transform: scale(0.8);
+        }
+
+        .c_zongzirou_in {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /*左叶*/
+        .c_zuoye {
+            width: 114px;
+            height: 266px;
+            background: url('img/leaf_left.png');
+            position: absolute;
+            left: 20px;
+            top: -50px;
+            z-index: 1;
+            opacity: 0;
+            transform-origin: left bottom;
+            transition: all 1s;
+        }
+
+        .c_zuoye_in {
+            opacity: 1;
+            transform: rotate(-5deg);
+        }
+
+        .c_zuoye_out {
+            opacity: 0;
+            transform: rotate(-15deg);
+        }
+
+        /*右叶*/
+        .c_youye {
+            width: 318px;
+            height: 388px;
+            background: url('img/leaf_right.png');
+            position: absolute;
+            left: 90px;
+            top: -60px;
+            z-index: 111;
+            opacity: 0;
+            transform-origin: left bottom;
+            transition: all 1s;
+            transform: scale(.8)
+        }
+
+        .c_youye_in {
+            opacity: 1;
+            transform: rotate(5deg) scale(.8);
+        }
+
+        .c_youye_out {
+            opacity: 0;
+            transform: rotate(15deg) scale(.8);
+        }
+
+        /*底叶*/
+        .c_diye {
+            width: 618px;
+            height: 468px;
+            background: url('img/leaf_expand.png');
+            position: absolute;
+            left: -150px;
+            top: -60px;
+            z-index: 99;
+            opacity: 0;
+            transition: all 1s;
+        }
+
+        .c_diye_in {
+            opacity: 1;
+        }
+
+        /*文本1*/
+        .c_t_1 {
+            width: 180px;
+            height: 100px;
+            background: url('img/t_jixiang.png');
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -50px;
+            margin-top: -30px;
+            z-index: 200;
+            transform-origin: center center;
+            /*缩放*/
+            transform: scale(.8);
+            opacity: 0;
+        }
+
+        /*文本2*/
+        .c_t_2 {
+            width: 180px;
+            height: 100px;
+            background: url('img/t_ruyi.png');
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -50px;
+            margin-top: -30px;
+            z-index: 200;
+            transform-origin: center center;
+            /*缩放*/
+            transform: scale(.8);
+            opacity: 0;
+        }
+
+        .c_t_in {
+            opacity: 1;
+        }
+
+        /*祝福语文字*/
+        .text {
+            position: absolute;
+            width: 400px;
+            height: 370px;
+            left: 180px;
+            top: 140px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #333;
+        }
+
+        /*祝福语标题*/
+        .text .caption {
+            width: 400px;
+            height: 240px;
+            background: url('img/caption.png') no-repeat;
+            /*为左移动画预留空间*/
+            margin-left: 40px;
+            opacity: 0;
+            transition: all 1s;
+        }
+
+        .text .caption_rock {
+            -webkit-animation: rock 4s infinite;
+        }
+
+        .text .to {
+            width: 400px;
+            margin-top: 10px;
+            margin-left: 40px;
+            opacity: 0;
+            /*在caption出现的0.5秒后出现*/
+            transition: all 1s .5s;
+        }
+
+        .text .msg {
+            width: 400px;
+            margin-top: 10px;
+            margin-left: 40px;
+            opacity: 0;
+            /*在caption出现的1秒后出现*/
+            transition: all 1s 1s;
+        }
+
+        .text .from {
+            width: 400px;
+            margin-top: 10px;
+            margin-left: 40px;
+            text-align: right;
+            opacity: 0;
+            /*在caption出现的1.5秒后出现*/
+            transition: all 1s 1.5s;
+        }
+
+        .text_in .caption,
+        .text_in .to,
+        .text_in .msg,
+        .text_in .from {
+            opacity: 1;
+            /*在这里用到了上面的预留空间*/
+            margin-left: 0;
+        }
+
+        /*粽子肉的旋转视角*/
+        .c_zongzirou_view_1 {
+            background-image: url('img/zzr_1.png');
+        }
+
+        .c_zongzirou_view_2 {
+            background-image: url('img/zzr_2.png');
+        }
+
+        .c_zongzirou_view_3 {
+            background-image: url('img/zzr_3.png');
+        }
+
+        .c_zongzirou_view_4 {
+            background-image: url('img/zzr_4.png');
+        }
+
+        .c_zongzirou_view_0 {
+            background-image: url('img/zzr_1.png');
+            transform: rotateY(180deg);
+        }
+
+        /*粽子肉上文字的旋转视角*/
+        .c_t_view_0 {
+            transform: scale(0.8);
+        }
+
+        .c_t_mirror_0 {
+            display: none;
+        }
+
+        .c_t_view_2 {
+            /* 1，缩放（因为c_t_1和c_t_2都缩放了，所以刚开始时候要保持原大小）。2，沿Y轴旋转30度。3，平移。4，旋转8度 */
+            transform: scale(0.8) rotateY(30deg) translate(-50px, 0) rotate(8deg);
+        }
+
+        .c_t_mirror_2 {
+            transform: scale(0.7) rotateY(70deg) translate(283px, -15px) rotate(-8deg);
+        }
+
+        .c_t_view_3 {
+            transform: scale(0.75) rotateY(49deg) translate(-94px, 0) rotate(15deg);
+        }
+
+        .c_t_mirror_3 {
+            transform: scale(0.75) rotateY(49deg) translate(118px, 0) rotate(-15deg);
+        }
+
+        .c_t_view_4 {
+            transform: scale(0.6) rotateY(50deg) translate(-196px, 10px) rotate(24deg);
+        }
+
+        .c_t_mirror_4 {
+            transform: scale(0.8) rotateY(30deg) translate(58px, 10px) rotate(-5deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="c_zongzi_box" id="c_zongzi_box">
+            <div class="c_zongzi" id="c_zongzi"></div>
+            <div class="c_shengzi_1" id="c_shengzi"></div>
+
+            <div class="c_zongzirou" id="c_zongzirou"></div>
+            <div class="c_zuoye" id="c_zuoye"></div>
+            <div class="c_youye" id="c_youye"></div>
+            <div class="c_diye" id="c_diye"></div>
+
+            <div class="c_t_1" id="c_t_1"></div>
+            <div class="c_t_2" id="c_t_2"></div>
+        </div>
+
+        <div class="text" id="text">
+            <div class="caption" id="caption"></div>
+            <div class="to">收件人</div>
+            <div class="msg">想要说的话。。。</div>
+            <div class="from">发送者</div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    var g = function (id) {
+        return document.getElementById(id);
+    }
+
+    //自定义时间类
+    var TimeLine = function () {
+        this.order = [];//自定义类属性：动画序列
+        //自定义类函数，参数为：何时触发，函数内容，日志标记
+        this.add = function (timeout, func, log) {
+            this.order.push({
+                'timeout': timeout,
+                'func': func,
+                'log': log
+            });
+        }
+        //参数 ff 支持快进，单位毫秒。代表想快进的时间
+        this.start = function (ff) {
+            for (i in this.order) {
+                //定义一个闭包函数，可以避免所有的值都是循环中的最后一个值
+                (function (me) {
+                    var fn = me.func;
+                    var timeout = me.timeout;
+                    var log = me.log;
+
+                    timeout = Math.max(timeout - (ff || 0), 0);//相减为负数时，等于0。注意：ff为空时，给默认值0
+
+                    setTimeout(fn, timeout);
+                })(this.order[i]);
+            }
+        }
+    }
+
+    //创建自定义的时间类对象，初始场景
+    var s1 = new TimeLine();
+    //粽子展开的场景
+    var s2 = new TimeLine();
+    //粽子旋转的场景
+    var s3 = new TimeLine();
+
+    s1.add(1, function () {
+        //开始抖动，抖动的class->c_zongzi_box_rock
+        g('c_zongzi_box').className = 'c_zongzi_box c_zongzi_box_rock';
+        g('c_shengzi').onclick = function () {
+            //进入下一动画
+            s2.start();
+        }
+    });
+
+    //定义绳子解开的动画
+    s2.add(1, function () {
+        //停止抖动
+        g('c_zongzi_box').className = 'c_zongzi_box';
+        //祝福文字登场
+        g('text').className = 'text text_in ';
+    });
+    s2.add(100, function () {
+        g('c_shengzi').className = 'c_shengzi_2';
+    });
+    s2.add(500, function () {
+        g('c_shengzi').className = 'c_shengzi_3';
+    });
+    s2.add(1000, function () {
+        g('c_shengzi').className = 'c_shengzi_4';
+        g('caption').className = 'caption caption_rock';
+    });
+    s2.add(1500, function () {
+        g('c_shengzi').className = 'c_shengzi_0';
+    });
+
+    //定义粽子展开的动画
+    s2.add(2000, function () {
+        //让粽子退出
+        g('c_zongzi').className = 'c_zongzi c_zongzi_out';
+        //粽子肉登场
+        g('c_zongzirou').className = 'c_zongzirou c_zongzirou_in';
+        //左右叶登场
+        g('c_zuoye').className = 'c_zuoye c_zuoye_in';
+        g('c_youye').className = 'c_youye c_youye_in';
+        //粽子肉上的祝福文字
+        g('c_t_1').className = 'c_t_1 c_t_in';
+        g('c_t_2').className = 'c_t_2 c_t_mirror_0';
+    });
+
+    s2.add(3000, function () {
+        //左右叶开始退场
+        g('c_zuoye').className = 'c_zuoye c_zuoye_in c_zuoye_out';
+        g('c_youye').className = 'c_youye c_youye_in c_youye_out';
+        //底叶进场
+        g('c_diye').className = 'c_diye c_diye_in';
+        //进入下一动画
+        s3.start();
+    });
+
+    //定义粽子肉托盘旋转动画
+    //1，粽子肉旋转
+    s3.add(1000, function () {
+        g('c_zongzirou').className = 'c_zongzirou c_zongzirou_in c_zongzirou_view_1';
+    });
+    s3.add(1200, function () {
+        g('c_zongzirou').className = 'c_zongzirou c_zongzirou_in c_zongzirou_view_2';
+        g('c_t_1').className = 'c_t_1 c_t_in c_t_view_2';
+        g('c_t_2').className = 'c_t_2 c_t_in c_t_mirror_2';
+    });
+    s3.add(1400, function () {
+        g('c_zongzirou').className = 'c_zongzirou c_zongzirou_in c_zongzirou_view_3';
+        g('c_t_1').className = 'c_t_1 c_t_in c_t_view_3';
+        g('c_t_2').className = 'c_t_2 c_t_in c_t_mirror_3';
+    });
+    s3.add(1600, function () {
+        g('c_zongzirou').className = 'c_zongzirou c_zongzirou_in c_zongzirou_view_4';
+        g('c_t_1').className = 'c_t_1 c_t_in c_t_view_4';
+        g('c_t_2').className = 'c_t_2 c_t_in c_t_mirror_4';
+    });
+    s3.add(1800, function () {
+        g('c_zongzirou').className = 'c_zongzirou c_zongzirou_in c_zongzirou_view_0';
+        g('c_t_1').className = 'c_t_1 c_t_in c_t_mirror_0';
+        g('c_t_2').className = 'c_t_2 c_t_in c_t_view_0';
+    });
+    //2，粽子肉旋转回去
+    s3.add(3000, function () {
+        g('c_zongzirou').className = 'c_zongzirou c_zongzirou_in c_zongzirou_view_4';
+        g('c_t_1').className = 'c_t_1 c_t_in c_t_view_4';
+        g('c_t_2').className = 'c_t_2 c_t_in c_t_mirror_4';
+    });
+    s3.add(3200, function () {
+        g('c_zongzirou').className = 'c_zongzirou c_zongzirou_in c_zongzirou_view_3';
+        g('c_t_1').className = 'c_t_1 c_t_in c_t_view_3';
+        g('c_t_2').className = 'c_t_2 c_t_in c_t_mirror_3';
+    });
+    s3.add(3400, function () {
+        g('c_zongzirou').className = 'c_zongzirou c_zongzirou_in c_zongzirou_view_2';
+        g('c_t_1').className = 'c_t_1 c_t_in c_t_view_2';
+        g('c_t_2').className = 'c_t_2 c_t_in c_t_mirror_2';
+    });
+    s3.add(3600, function () {
+        g('c_zongzirou').className = 'c_zongzirou c_zongzirou_in c_zongzirou_view_1';
+        g('c_t_1').className = 'c_t_1 c_t_in c_t_view_0';
+        g('c_t_2').className = 'c_t_2 c_t_in c_t_mirror_0';
+    });
+    //5秒后再旋转
+    s3.add(5000, function () {
+        s3.start();
+    });
+
+    //图片加载器：解决图片闪动问题
+    var imgs = ['img/zzr_2.png', 'img/zzr_3.png', 'img/zzr_4.png'];
+    var imgs_onload = function () {
+        imgs.pop();
+        if (imgs.length == 0) {
+            s1.start();
+        }
+    }
+    for (i in imgs) {
+        var img = new Image;//使用js的方式创建图片
+        img.onload = imgs_onload;
+        img.src = imgs[i];
+    }
+</script>
+
+</html>
