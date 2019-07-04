@@ -1,0 +1,62 @@
+<html>
+
+<head>
+    <title>用定时器做的进度条</title>
+    <meta charset="utf-8">
+    <style>
+        /*让该div盖在所有元素之上*/
+        .loading {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            background-color: #fff;
+        }
+
+        .loading .pic {
+            width: 64px;
+            height: 64px;
+            background: url('img/69.gif');
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <img
+        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562725481&di=4a1de0ff963c0d1ee53a6995593701bc&imgtype=jpg&er=1&src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn20110%2F600%2Fw1920h1080%2F20181217%2F1a12-hqhtqsp2358602.jpg" />
+    <img
+        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562130815155&di=b81681e2e9c37c34165d97438b494194&imgtype=0&src=http%3A%2F%2Fb.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fb3b7d0a20cf431adfa6d40714036acaf2edd983e.jpg" />
+    <img
+        src=https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562725553&di=bc7a8e924e7498eb42074a3ca70d323e&imgtype=jpg&er=1&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0df3d7ca7bcb0a4649a43a076f63f6246b60af0e.jpg"" />
+    <img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=588092315,3043457270&fm=26&gp=0.jpg" />
+    <img
+        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562725587&di=65e82a607c94e01bf3cf193565b22188&imgtype=jpg&er=1&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201804%2F05%2F20180405211031_dfNtf.jpeg" />
+    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3296923695,244640568&fm=26&gp=0.jpg" />
+    <img
+        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562725614&di=82efe1f2276f5b1567e62d07705be269&imgtype=jpg&er=1&src=http%3A%2F%2Fr.photo.store.qq.com%2Fpsb%3F%2FV13To1U20nGVFh%2FL1YSTckoUSc%2AeKeRMCvr%2AR7ye6deUy.hU.pvzhcxdmM%21%2Fr%2FdHinRTNHggAA%26amp%3Bbo%3DIAPCAUAGQAYBAMc%21" />
+    <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1940900633,318269244&fm=26&gp=0.jpg" />
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+    $(function () {
+        //缺点：只能通过固定的时间来加载内容
+        var loading = '<div class="loading"><div class="pic"></div></div>';
+        $('body').append(loading);
+
+        //延迟3秒再加载内容（这里就是那些img标签）
+        setInterval(function () {
+            $('.loading').fadeOut();
+        }, 3000);
+    });
+</script>
+
+</html>
