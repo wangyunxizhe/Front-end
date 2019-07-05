@@ -1,0 +1,93 @@
+<html>
+
+<head>
+    <title>JS和jQuery的宽高理解</title>
+    <meta charset="utf-8">
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    #test {
+        height: 120px;
+        width: 100px;
+        padding: 10px;
+        background: red;
+        border: 10px solid yellow;
+        overflow: scroll;
+    }
+
+    #testEvent {
+        background: green;
+        width: 200px;
+        height: 200px;
+        margin: 100px auto;
+    }
+</style>
+
+<body>
+    <div id="test"></div>
+    <div id="testEvent">点击，观察控制台</div>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+    console.log('窗口的innerHeight（平常实际看网页的部分）：' + window.innerHeight);
+    console.log('窗口的innerWidth：' + window.innerWidth);
+    console.log('窗口的innerHeight（整个窗口的高度）：' + window.outerHeight);
+    console.log('窗口的outerWidth：' + window.outerWidth);
+    console.log('-----------------');
+    console.log('屏幕的宽度：' + window.screen.width);
+    console.log('屏幕的高度：' + window.screen.height);
+    console.log('屏幕的可利用宽度：' + window.screen.availWidth);
+    console.log('屏幕的可利用高度：' + window.screen.availHeight);
+    console.log('屏幕的screenLeft（浏览器窗口距离屏幕左侧的距离）：' + window.screenLeft);
+    console.log('屏幕的screenTop（浏览器窗口距离屏幕顶部的距离）：' + window.screenTop);
+    console.log('--------结论：屏幕的宽高不会随着窗口的缩放而改变---------');
+    //clientWidth：
+    //无padding无滚动条时，就是元素的宽度
+    //有padding无滚动条时，clientWidth = 元素宽度 + 元素padding*2
+    //有padding有滚动条（且显示）时，clientWidth = （元素宽度 + 元素padding*2）- 滚动条宽度
+    console.log('div->test的clientHeight：' + document.getElementById('test').clientHeight);
+    console.log('div->test的clientWidth：' + document.getElementById('test').clientWidth);
+    //clientLeft和clientTop用来读取元素border的宽度和高度
+    //clientTop = border-top的border-width；clientLeft = border-left的border-width
+    console.log('div->test的clientLeft：' + document.getElementById('test').clientLeft);
+    console.log('div->test的clientTop：' + document.getElementById('test').clientTop);
+    //下面这一对属性指的是元素的border + padding + 内容的宽度和高度
+    //无padding无滚动条无border，offsetWidth = clientWidth = style.width
+    //有padding无滚动条有border，offsetWidth = style.width + style.padding*2 + (border-width)*2 或者 offsetWidth = clientWidth + border宽度*2
+    //有padding有滚动条（且显示）有border，offsetWidth = style.width + style.padding*2 + (border-width)*2 或者 offsetWidth = clientWidth + 滚动条宽度 + border宽度*2
+    console.log('div->test的offsetHeight：' + document.getElementById('test').offsetHeight);
+    console.log('div->test的offsetWidth：' + document.getElementById('test').offsetWidth);
+    //无滚动条，scrollWidth = clientWidth = style.width + style.padding*2
+    //有滚动条，scrollWidth = 实际内容宽度 + style.padding*2；scrollHeight = 实际内容高度 + style.padding*2
+    console.log('div->test的scrollHeight：' + document.getElementById('test').scrollHeight);
+    console.log('div->test的scrollWidth：' + document.getElementById('test').scrollWidth);
+    console.log('div->test的scrollLeft：' + document.getElementById('test').scrollLeft);
+    console.log('div->test的scrollTop：' + document.getElementById('test').scrollTop);
+
+    var testEvent = document.getElementById('testEvent');
+    testEvent.onclick = function (e) {
+        console.log("client X Y-->" + e.clientX + ":" + e.clientY);
+        console.log("screen X Y-->" + e.screenX + ":" + e.screenY);
+        console.log("offset X Y-->" + e.offsetX + ":" + e.offsetY);
+        console.log("page X Y-->" + e.pageX + ":" + e.pageY);
+        console.log("x y-->" + e.x + ":" + e.y);
+    };
+
+    //获取滚动轴宽度
+    function getScrollBar() {
+        var test = document.getElementById('test');
+        var scrollBarWidth = test.offsetWidth - test.clientWidth;
+        return scrollBarWidth;
+    }
+    console.log('div->test的滚动轴宽度->' + getScrollBar());
+
+    //jQuery中的offset()，返回的是相对于document的当前坐标值（相对于body左上角的left，top的值）
+    //position()，返回的是相对于offset parent的当前坐标值（相对于offset parent元素左上角的left，top的值）
+</script>
+
+</html>
