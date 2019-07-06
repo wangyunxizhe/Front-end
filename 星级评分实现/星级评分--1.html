@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>星级评分--1</title>
+</head>
+<style>
+    body,
+    ul,
+    li {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        list-style-type: none;
+    }
+
+    .rating {
+        width: 180px;
+        height: 36px;
+        margin: 100px auto;
+    }
+
+    .rating-itme {
+        float: left;
+        width: 36px;
+        height: 36px;
+        background: url('img/1.png') no-repeat;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <ul class="rating" id="rating">
+        <li class="rating-itme" title="很不好"></li>
+        <li class="rating-itme" title="不好"></li>
+        <li class="rating-itme" title="一般"></li>
+        <li class="rating-itme" title="好"></li>
+        <li class="rating-itme" title="很好"></li>
+    </ul>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+    var num = 2,
+        $rating = $('#rating'),
+        $item = $rating.find('.rating-itme');//这样命名只是为了标识它是jQuery对象
+    //点亮星星
+    var lightOn = function (num) {
+        $item.each(function (i) {
+            if (i < num) {//把li的下标小于设置的默认值的星星点亮，在这里就是默认点亮两颗星星
+                $(this).css('background-position', '0 -36px');//将背景图片向上移动到亮起的星星
+            } else {
+                $(this).css('background-position', '0 0');
+            }
+        });
+    }
+
+    //初始化点亮2颗
+    lightOn(num);
+
+    //事件绑定
+    $item.on('mouseover', function () {
+        lightOn($(this).index() + 1);
+    }).on('click', function () {
+        num = $(this).index() + 1;
+    });
+
+    $rating.on('mouseout', function () {
+        lightOn(num);
+    });
+</script>
+
+</html>

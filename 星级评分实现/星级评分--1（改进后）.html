@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>星级评分--1（改进后）</title>
+</head>
+<style>
+    body,
+    ul,
+    li {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        list-style-type: none;
+    }
+
+    .rating {
+        width: 180px;
+        height: 36px;
+        margin: 100px auto;
+    }
+
+    .rating-itme {
+        float: left;
+        width: 36px;
+        height: 36px;
+        background: url('img/1.png') no-repeat;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <ul class="rating" id="rating">
+        <li class="rating-itme" title="很不好"></li>
+        <li class="rating-itme" title="不好"></li>
+        <li class="rating-itme" title="一般"></li>
+        <li class="rating-itme" title="好"></li>
+        <li class="rating-itme" title="很好"></li>
+    </ul>
+
+    <ul class="rating" id="rating2">
+        <li class="rating-itme" title="很不好"></li>
+        <li class="rating-itme" title="不好"></li>
+        <li class="rating-itme" title="一般"></li>
+        <li class="rating-itme" title="好"></li>
+        <li class="rating-itme" title="很好"></li>
+    </ul>
+
+    <ul class="rating" id="rating3">
+        <li class="rating-itme" title="很不好"></li>
+        <li class="rating-itme" title="不好"></li>
+        <li class="rating-itme" title="一般"></li>
+        <li class="rating-itme" title="好"></li>
+        <li class="rating-itme" title="很好"></li>
+    </ul>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+    //改进1：用匿名函数+闭包解决过多全局变量的问题（过多全局变量可能导致多人开发时，变量重名的问题）
+    var rating = (function () {
+        //点亮星星
+        var lightOn = function ($item, num) {
+            $item.each(function (i) {
+                if (i < num) {//把li的下标小于设置的默认值的星星点亮，在这里就是默认点亮两颗星星
+                    $(this).css('background-position', '0 -36px');//将背景图片向上移动到亮起的星星
+                } else {
+                    $(this).css('background-position', '0 0');
+                }
+            });
+        }
+
+        //改进3：接受入参，并将init作为对象返回供外部调用，让使用更灵活
+        var init = function (elid, num) {
+            var $rating = $(elid),
+                $item = $rating.find('.rating-itme');//这样命名只是为了标识它是jQuery对象
+
+            //初始化点亮2颗
+            lightOn($item, num);
+
+            //改进2：事件委托：将子元素.rating-itme的事件委托给父元素#rating来处理。注意，最后一个连缀不是委托，就是事件绑定
+            $rating.on('mouseover', '.rating-itme', function () {
+                lightOn($item, $(this).index() + 1);
+            }).on('click', '.rating-itme', function () {
+                num = $(this).index() + 1;
+            }).on('mouseout', function () {
+                lightOn($item, num);
+            });
+        };
+
+        //改进4（可有可无）：变为jQuery插件
+        $.fn.extend({
+            rating: function (num) {//这里就不用传el了，this就这调用这个方法的元素本身了
+                return this.each(function () {
+                    init(this, num);
+                });
+            }
+        });
+
+        return { 'init': init };
+    })();
+
+    rating.init('#rating', 2);
+    rating.init('#rating2', 3);
+
+    //使用改进4之后的调用方式
+    $('#rating3').rating(4);
+</script>
+
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>星级评分-- 2</title>
+</head>
+<style>
+    body,
+    ul,
+    li {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        list-style-type: none;
+    }
+
+    .rating {
+        width: 180px;
+        height: 36px;
+        margin: 100px auto;
+    }
+
+    .rating-itme {
+        float: left;
+        width: 36px;
+        height: 36px;
+        background: url('img/1.png') no-repeat;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <ul class="rating" id="rating">
+        <li class="rating-itme" title="很不好"></li>
+        <li class="rating-itme" title="不好"></li>
+        <li class="rating-itme" title="一般"></li>
+        <li class="rating-itme" title="好"></li>
+        <li class="rating-itme" title="很好"></li>
+    </ul>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+    var rating = (function () {
+        //点亮整颗星星的构造函数
+        var LightEntire = function (elid, options) {
+            this.$el = $(elid);
+            this.$item = this.$el.find('.rating-itme');
+            this.opts = options;
+        };
+        LightEntire.prototype.init = function () {
+            this.lightOn(this.opts.num);
+            if (!this.opts.readOnly) {//readOnly属性为true时，不绑定事件
+                this.bindEvent();
+            }
+        };
+        //点亮整颗方法
+        LightEntire.prototype.lightOn = function (num) {//参数num：需要点亮的星星数
+            num = parseInt(num);//转为整数
+            this.$item.each(function (i) {
+                if (i < num) {//把li的下标小于设置的默认值的星星点亮，在这里就是默认点亮两颗星星
+                    $(this).css('background-position', '0 -36px');//将背景图片向上移动到亮起的星星
+                } else {
+                    $(this).css('background-position', '0 0');
+                }
+            });
+        };
+        //整颗绑定事件方法
+        LightEntire.prototype.bindEvent = function () {
+            var self = this,
+                itemLength = self.$item.length;
+            this.$el.on('mouseover', '.rating-itme', function () {//鼠标移动到星星时
+                var num = $(this).index() + 1;
+                self.lightOn(num);
+                //知识点1：&&前面为true，再执行&&后面的代码
+                //知识点2：.call()里面第一个参数this，这时的this代表了每个星星自身
+                (typeof self.opts.select === 'function') && self.opts.select.call(this, num, itemLength);
+                //知识点3：trigger('事件名',该事件所需要的参数)；触发一个指定的事件，并为这个事件提供所需的参数
+                self.$el.trigger('select', [num, itemLength]);
+            }).on('click', '.rating-itme', function () {//鼠标点击星星时
+                self.opts.num = $(this).index() + 1;
+                (typeof self.opts.chosen === 'function') && self.opts.chosen.call(this, self.opts.num, itemLength);
+                self.$el.trigger('chosen', [self.opts.num, itemLength]);
+            }).on('mouseout', function () {//鼠标移出星星时
+                self.lightOn(self.opts.num);
+            });
+        };
+
+        //点亮半颗星星的构造函数
+        var LightHalf = function (elid, options) {
+            this.$el = $(elid);
+            this.$item = this.$el.find('.rating-itme');
+            this.opts = options;
+            this.add = 1;//用于方便计算点亮的是整颗还是半颗
+        };
+        LightHalf.prototype.init = function () {
+            this.lightOn(this.opts.num);
+            if (!this.opts.readOnly) {//readOnly属性为true时，不绑定事件
+                this.bindEvent();
+            }
+        };
+        //点亮半颗方法
+        LightHalf.prototype.lightOn = function (num) {//参数num：需要点亮的星星数
+            var count = parseInt(num),
+                isHalf = parseInt(num) !== num;//转为整数后，查看是否还等于入参原值。不等于则说明入参是小数。那么就认为入参是小数
+            this.$item.each(function (i) {
+                if (i < count) {
+                    $(this).css('background-position', '0 -36px');
+                } else {
+                    $(this).css('background-position', '0 0');
+                }
+            });
+
+            if (isHalf) {//入参为小数-->点亮半颗
+                this.$item.eq(count).css('background-position', '0 -76px');
+            }
+        };
+        //半颗绑定事件方法
+        LightHalf.prototype.bindEvent = function () {
+            var self = this,
+                itemLength = self.$item.length;
+            this.$el.on('mousemove', '.rating-itme', function (e) {//鼠标移动到星星时
+                var $this = $(this),
+                    num = 0;
+                if (e.pageX - $this.offset().left < $this.width() / 2) {//半颗的位置
+                    self.add = 0.5;
+                } else {
+                    self.add = 1;
+                }
+                num = $this.index() + self.add;
+                self.lightOn(num);
+                (typeof self.opts.select === 'function') && self.opts.select.call(this, num, itemLength);
+                self.$el.trigger('select', [num, itemLength]);
+            }).on('click', '.rating-itme', function () {//鼠标点击星星时
+                self.opts.num = $(this).index() + self.add;
+                (typeof self.opts.chosen === 'function') && self.opts.chosen.call(this, self.opts.num, itemLength);
+                self.$el.trigger('chosen', [self.opts.num, itemLength]);
+            }).on('mouseout', function () {//鼠标移出星星时
+                self.lightOn(self.opts.num);
+            });
+        };
+
+
+        //默认参数
+        var defaults = {
+            //默认整颗整颗点亮
+            model: 'LightEntire',
+            //默认点亮2颗
+            num: 2,
+            readOnly: false,
+            //当鼠标移到每一个星星上时要执行的方法。
+            select: function () { },
+            //当鼠标点击每一个星星上时要执行的方法
+            chosen: function () { }
+        };
+
+        var mode = {
+            'LightEntire': LightEntire,
+            'LightHalf': LightHalf
+        };
+
+        //初始化
+        var init = function (elid, option) {
+            options = $.extend({}, defaults, option);//$.extend({},a,b) --> 使用b对象的数据覆盖a对象，放入到空的“{}”，再返回出来
+            //new LightEntire(elid, options).init();//整颗初始化
+            //new LightHalf(elid, options).init();//半颗初始化
+            if (!mode[options.model]) {
+                mode[options.model] = 'LightEntire';
+            }
+            new mode[options.model](elid, options).init();//加上mode，优化后的写法
+        };
+
+        return { init: init };
+    })();
+
+    //开始使用，并传参
+    rating.init('#rating', {
+        model: 'LightHalf',
+        num: 2.5
+        // select: function (num, count) {//参数1：当前是第几颗星星。参数2：共有多少颗星星
+        //     console.log(num + '/' + count);
+        // }
+    });
+
+    $('#rating').on('select', function (e, num, count) {
+        console.log(num + '/' + count);
+    }).on('chosen', function (e, num, count) {
+        console.log(num + '/' + count);
+    });
+</script>
+
+</html>

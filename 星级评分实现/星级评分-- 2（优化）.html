@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>星级评分-- 2（优化）</title>
+</head>
+<style>
+    body,
+    ul,
+    li {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        list-style-type: none;
+    }
+
+    .rating {
+        width: 180px;
+        height: 36px;
+        margin: 100px auto;
+    }
+
+    .rating-itme {
+        float: left;
+        width: 36px;
+        height: 36px;
+        background: url('img/1.png') no-repeat;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <ul class="rating" id="rating">
+        <li class="rating-itme" title="很不好"></li>
+        <li class="rating-itme" title="不好"></li>
+        <li class="rating-itme" title="一般"></li>
+        <li class="rating-itme" title="好"></li>
+        <li class="rating-itme" title="很好"></li>
+    </ul>
+
+    <ul class="rating" id="rating2">
+        <li class="rating-itme" title="很不好"></li>
+        <li class="rating-itme" title="不好"></li>
+        <li class="rating-itme" title="一般"></li>
+        <li class="rating-itme" title="好"></li>
+        <li class="rating-itme" title="很好"></li>
+    </ul>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+    var rating = (function () {
+        //继承，参数1：子类，参数2：父类
+        var extend = function (subClass, superClass) {
+            var F = function () { };
+            F.prototype = superClass.prototype;
+            subClass.prototype = new F();
+            subClass.prototype.construtor = subClass;
+        };
+        //点亮
+        var Light = function (elid, options) {
+            this.$el = $(elid);
+            this.$item = this.$el.find('.rating-itme');
+            this.opts = options;
+            this.add = 1;//用于方便计算点亮的是整颗还是半颗
+            this.selectEvent = 'mouseover';//点亮半颗需要的事件
+        };
+        Light.prototype.init = function () {
+            this.lightOn(this.opts.num);
+            if (!this.opts.readOnly) {//readOnly属性为true时，不绑定事件
+                this.bindEvent();
+            }
+        };
+        Light.prototype.lightOn = function (num) {//参数num：需要点亮的星星数
+            num = parseInt(num);//转为整数
+            this.$item.each(function (i) {
+                if (i < num) {
+                    $(this).css('background-position', '0 -36px');
+                } else {
+                    $(this).css('background-position', '0 0');
+                }
+            });
+        };
+        //整颗绑定事件方法
+        Light.prototype.bindEvent = function () {
+            var self = this,
+                itemLength = self.$item.length;
+            this.$el.on(self.selectEvent, '.rating-itme', function (e) {//鼠标移动到星星时
+                var $this = $(this),
+                    num = 0;
+                self.select(e, $this);
+                num = $(this).index() + self.add;
+                self.lightOn(num);
+                //知识点1：&&前面为true，再执行&&后面的代码
+                //知识点2：.call()里面第一个参数this，这时的this代表了每个星星自身
+                (typeof self.opts.select === 'function') && self.opts.select.call(this, num, itemLength);
+                //知识点3：trigger('事件名',该事件所需要的参数)；触发一个指定的事件，并为这个事件提供所需的参数
+                self.$el.trigger('select', [num, itemLength]);
+            }).on('click', '.rating-itme', function () {//鼠标点击星星时
+                self.opts.num = $(this).index() + self.add;
+                (typeof self.opts.chosen === 'function') && self.opts.chosen.call(this, self.opts.num, itemLength);
+                self.$el.trigger('chosen', [self.opts.num, itemLength]);
+            }).on('mouseout', function () {//鼠标移出星星时
+                self.lightOn(self.opts.num);
+            });
+        };
+        Light.prototype.select = function () {
+            throw new Error('子类必须重写此方法');//使用抛出错误的方式，告诉子类必须实现这个方法
+        };
+        //一旦点击星星后，就不能再点
+        Light.prototype.unbindEvent = function () {
+            this.$el.off();
+        };
+
+        //点亮整颗星星的构造函数
+        var LightEntire = function (elid, options) {
+            Light.call(this, elid, options);//调用Light的构造函数，并继承它的所有属性
+            this.selectEvent = 'mouseover';//点亮整颗需要的事件
+        };
+        extend(LightEntire, Light);
+        //点亮整颗方法
+        LightEntire.prototype.lightOn = function (num) {//参数num：需要点亮的星星数
+            Light.prototype.lightOn.call(this, num);
+        };
+        LightEntire.prototype.select = function () {
+            self.add = 1;
+        };
+
+        //点亮半颗星星的构造函数
+        var LightHalf = function (elid, options) {
+            Light.call(this, elid, options);//调用Light的构造函数，并继承它的所有属性
+            this.selectEvent = 'mousemove';//点亮半颗需要的事件
+        };
+        extend(LightHalf, Light);
+        //点亮半颗方法
+        LightHalf.prototype.lightOn = function (num) {//参数num：需要点亮的星星数
+            var count = parseInt(num),
+                isHalf = parseInt(num) !== num;//转为整数后，查看是否还等于入参原值。不等于则说明入参是小数。那么就认为入参是小数
+            Light.prototype.lightOn.call(this, count);
+            if (isHalf) {//入参为小数-->点亮半颗
+                this.$item.eq(count).css('background-position', '0 -76px');
+            }
+        };
+        LightHalf.prototype.select = function (e, $this) {
+            if (e.pageX - $this.offset().left < $this.width() / 2) {//半颗的位置
+                this.add = 0.5;
+            } else {
+                this.add = 1;
+            }
+        };
+
+        //默认参数
+        var defaults = {
+            //默认整颗整颗点亮
+            model: 'LightEntire',
+            //默认点亮2颗
+            num: 2,
+            readOnly: false,
+            //当鼠标移到每一个星星上时要执行的方法。
+            select: function () { },
+            //当鼠标点击每一个星星上时要执行的方法
+            chosen: function () { }
+        };
+
+        var mode = {
+            'LightEntire': LightEntire,
+            'LightHalf': LightHalf
+        };
+
+        //初始化
+        var init = function (elid, option) {
+            var $el = $(elid),
+                rating = $el.data('rating'),//获取rating的value
+                options = $.extend({}, defaults, typeof option === 'object' && option);
+            if (!mode[options.model]) {
+                mode[options.model] = 'LightEntire';
+            }
+            if (!rating) {
+                $el.data('rating', (rating = new mode[options.model](elid, options)));
+                rating.init();
+            }
+            if (typeof option === 'string') {
+                rating[option]();
+            }
+        };
+
+        //做成jQuery插件
+        $.fn.extend({
+            rating: function (option) {
+                return this.each(function () {
+                    init(this, option);
+                });
+            }
+        });
+
+        return { init: init };
+    })();
+
+    $('#rating').rating({
+        model: 'LightEntire',
+        num: 2
+    });
+
+    $('#rating2').rating({
+        model: 'LightHalf',
+        num: 3.5
+    });
+    $('#rating2').on('chosen', function () {
+        $('#rating2').rating('unbindEvent');
+    });
+</script>
+
+</html>
