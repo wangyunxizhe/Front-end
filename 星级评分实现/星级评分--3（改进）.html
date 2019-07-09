@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>星级评分--3（改进）</title>
+</head>
+<style>
+    .rating {
+        position: relative;
+        width: 160px;
+        height: 32px;
+        background: url('img/3.jpg') repeat-x;
+        margin: 100px auto;
+        overflow: hidden;
+    }
+
+    .rating:hover .rating-item {
+        background: none;
+    }
+
+    .rating-item:hover {
+        /* !important--强调此处优先级最高 */
+        background: url('img/3.jpg') repeat-x 0 -160px !important;
+    }
+
+    .rating-item {
+        position: absolute;
+        top: 0;
+        z-index: 3;
+        width: 32px;
+        height: 32px;
+    }
+
+    .rating-item-1 {
+        left: 0;
+    }
+
+    .rating-item-2 {
+        left: 32px;
+    }
+
+    .rating-item-3 {
+        left: 64px;
+    }
+
+    .rating-item-4 {
+        left: 96px;
+    }
+
+    .rating-item-5 {
+        left: 128px;
+    }
+
+    .rating-item:hover {
+        left: 0;
+        z-index: 2;
+        background: url('img/3.jpg') repeat-x 0 -160px;
+    }
+
+    /*把单选按钮放在.rating以外的地方，因为.rating设置了overflow: hidden，所以就变相隐藏了，但不能真的隐藏，不然就没有单选按钮的效果了*/
+    .rating input {
+        position: absolute;
+        left: 0;
+        top: -20px;
+    }
+
+    /*触发单选按钮的同时，也触发.rating-item的动作，下面类似写法同理*/
+    input:checked+.rating-item {
+        left: 0;
+        z-index: 1;
+        background: url('img/3.jpg') repeat-x 0 -160px;
+    }
+
+    input:checked+.rating-item~.rating-item:hover {
+        left: 0;
+    }
+
+    .rating-item-1:hover,
+    #rating-1:checked+.rating-item {
+        width: 32px;
+    }
+
+    .rating-item-2:hover,
+    #rating-2:checked+.rating-item {
+        width: 64px;
+    }
+
+    .rating-item-3:hover,
+    #rating-3:checked+.rating-item {
+        width: 96px;
+    }
+
+    .rating-item-4:hover,
+    #rating-4:checked+.rating-item {
+        width: 128px;
+    }
+
+    .rating-item-5:hover,
+    #rating-5:checked+.rating-item {
+        width: 160px;
+    }
+
+    .rating-item label {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div class="rating">
+        <!--想默认选中几颗星，就在第几颗星的input中加上checked="checked"-->
+        <input type="radio" name="rating" id="rating-1" value="1" />
+        <a href="javascript:;" class="rating-item rating-item-1" title="很不好">
+            <label for="rating-1"></label>
+        </a>
+        <input type="radio" name="rating" id="rating-2" value="2" />
+        <a href="javascript:;" class="rating-item rating-item-2" title="不好">
+            <label for="rating-2"></label>
+        </a>
+        <input type="radio" name="rating" id="rating-3" value="3" />
+        <a href="javascript:;" class="rating-item rating-item-3" title="一般">
+            <label for="rating-3"></label>
+        </a>
+        <input type="radio" name="rating" id="rating-4" value="4" />
+        <a href="javascript:;" class="rating-item rating-item-4" title="好">
+            <label for="rating-4"></label>
+        </a>
+        <input type="radio" name="rating" id="rating-5" value="5" />
+        <a href="javascript:;" class="rating-item rating-item-5" title="很好">
+            <label for="rating-5"></label>
+        </a>
+    </div>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+
+</script>
+
+</html>
