@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket--2</title>
+</head>
+
+<body>
+    <h1>聊天测试</h1>
+    <input id="sendTxt" type="text" />
+    <button id="sendBtn">发送</button>
+</body>
+
+<script type="text/javascript">
+    var websocket = new WebSocket('ws://echo.websocket.org/');//这里使用的是别人的WebSocket服务器
+
+    function showMessage(str) {
+        var div = document.createElement('div');
+        div.innerHTML = str;
+        document.body.appendChild(div);
+    }
+
+    websocket.onopen = function () {
+        console.log('websocket open');
+        document.getElementById('sendBtn').onclick = function () {
+            var txt = document.getElementById('sendTxt').value;
+            if (txt) {
+                websocket.send(txt);
+            }
+        }
+    }
+
+    websocket.onclose = function () {
+        console.log('websocket close');
+    }
+
+    websocket.onmessage = function (e) {
+        console.log(e.data);
+        showMessage(e.data);
+    }
+
+
+</script>
+
+</html>
