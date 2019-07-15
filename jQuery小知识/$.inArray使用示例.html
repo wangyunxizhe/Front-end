@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>jQuery中查找数组中的索引inArray</title>
+    <style>
+        p {
+            color: red;
+        }
+
+        div {
+            width: 200px;
+            height: 100px;
+            background-color: yellow;
+            color: red;
+        }
+    </style>
+    <script src="js/jquery-1.8.3.min.js"></script>
+</head>
+
+<body>
+    <h2>inArray方法</h2>
+    <p>语法：</p>
+    <p>jQuery.inArray(value,array,[fromIndex])</p>
+    <div id="aaron"></div>
+    点击观察结果：
+    <select id="animation">
+        <option value="1">inArray</option>
+        <option value="2">inArray</option>
+    </select>
+    <input id="exec" type="button" value="执行动画">
+    <script type="text/javascript">
+        $("#exec").click(function () {
+            var v = $("#animation").val();
+            var $aaron = $("#aaron");
+            $aaron.empty();
+            if (v == "1") {
+                var index = $.inArray('Aaron', ['test', 'Aaron', 'array', 'wyuan']);
+                $aaron.text('Aaron的索引是: ' + index)
+            } else if (v == "2") {
+                //指定索引开始的位置
+                var index = $.inArray('a', ['a', 'b', 'c', 'd', 'a', 'c'], 2);
+                $aaron.text('a的索引是: ' + index)
+            }
+        });
+    </script>
+</body>
+
+</html>
