@@ -1,0 +1,136 @@
+<html>
+
+<head>
+    <title>全屏滑动特效</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            /*隐藏超出部分，滚动条就显示不出来了，便于后续全屏滚动操作*/
+            overflow: hidden;
+        }
+
+        #container,
+        .sections,
+        .section {
+            height: 100%;
+            position: relative;
+        }
+
+        /*使背景图片始终位于屏幕中心*/
+        #section0,
+        #section1,
+        #section2,
+        #section3 {
+            background-color: #000;
+            background-size: cover;
+            background-position: 50% 50%;
+            text-align: center;
+            color: white;
+        }
+
+        #section0 {
+            background-image: url(images/1.jpg);
+        }
+
+        #section1 {
+            background-image: url(images/2.jpg);
+        }
+
+        #section2 {
+            background-image: url(images/3.jpg);
+        }
+
+        #section3 {
+            background-image: url(images/4.jpg);
+        }
+
+        h3 {
+            font-size: 6em;
+            font-weight: normal;
+        }
+
+        .pages {
+            position: fixed;
+            list-style: none;
+        }
+
+        .vertical.pages {
+            right: 10px;
+            top: 50%;
+        }
+
+        .horizontal.pages {
+            left: 50%;
+            bottom: 10px;
+        }
+
+        .pages li {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            margin: 10px 5px;
+            cursor: pointer;
+        }
+
+        .horizontal.pages li {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .pages li.active {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #FFFE00;
+            background: none;
+            margin-left: 0;
+        }
+
+        /* 横屏滚动时所必须的class，暂时写在这里，会放到js插件中去动态实现 */
+        .left {
+            float: left;
+            width: 25%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- style="width:400%"---》4张图片宽度就给400%，5张就500%，依此类推（暂时写在这里，会放到js插件中去动态实现）。
+            data-PageSwitch属性用于在pageSwitch.js中初始化用 -->
+    <div id="container" data-PageSwitch>
+        <div class="sections">
+            <div class="section" id="section0">
+                <h3>这是一个页面</h3>
+            </div>
+            <div class="section" id="section1">
+                <h3>这是一个页面</h3>
+            </div>
+            <div class="section" id="section2">
+                <h3>这是一个页面</h3>
+            </div>
+            <div class="section" id="section3">
+                <h3>这是一个页面</h3>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/pageSwitch.js"></script>
+    <script>
+        //当需要自定义创建PageSwitch的属性时，需要在页面中写好，再调用init方法。如果按默认的，可以直接在插件里写死
+        /*$("#container").PageSwitch({
+            direction: "horizontal"
+        });
+
+        $("#container").PageSwitch("init");*/
+    </script>
+</body>
+
+</html>
