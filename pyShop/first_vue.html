@@ -30,26 +30,50 @@
         <span v-if="isSeen">if</span>
         <span v-show="isSeen">show</span>
         <hr>
-        <!-- for循环： -->
+        <!-- for循环 -->
         <ul>
             <li v-for="shop in shops">{{shop}}</li>
             <li v-for="(home,index) in homes">第{{index+1}}个{{home}}</li>
+            <!-- 对象形式的for:value/name名称写法可以自定义，顺序不能变 -->
+            <li v-for="(value,name) in toys">{{name}}:{{value}}</li>
         </ul>
+        <hr>
+        <!-- 绑定事件 -->
+        <button v-on:click="counter+=1">Add 1</button>
+        <span>counter is {{counter}}</span>
+        <hr>
+        <button v-on:click="login()">注册</button>
+        <hr>
+        <button v-on:click="say('abc')">带参method</button>
+        <hr>
+        <!-- 也可以使用 @ 代替 v-on: 的写法 -->
+        <button @click="say('abc')">@带参method</button>
     </div>
 </body>
 <script type="text/javascript">
     var app = new Vue({
         el: '#app', //与 document.getElementById('app') / $('#app') 一个意思
         //delimiters: ['[[', ']]'], //将语法中的“{{}}”替换成“[[]]”
-        data: { //存放变量
-            msg: 'first vue',
+        data: { //用于存放 id=app 中使用到的变量
+            msg: 'vue语法基础',
             info: '点击跳转',
             addr: 'http://www.baidu.com',
             isLogin: true,
             level: 2,
             isSeen: false,
             shops: ['南京', '北京', '上海', '广州', '深圳'],
-            homes: ['东京', '巴黎', '米兰', '纽约', '洛杉矶']
+            homes: ['东京', '巴黎', '米兰', '纽约', '洛杉矶'],
+            toys: { title: '杜卡迪', name: '1199', dateAt: '2021-10-25' },
+            counter: 1
+        },
+        methods: {//用于存放 id=app 中使用到的函数
+            //方法名:方法体
+            login: function () {
+                alert('登录中。。。')
+            },
+            say: function (msg) {
+                alert(msg)
+            }
         }
     })
 </script>

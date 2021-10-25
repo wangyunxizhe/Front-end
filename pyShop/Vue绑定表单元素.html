@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--第一步：需要先导入vue.js，要写在head里-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Vue绑定表单元素</title>
+</head>
+
+<body>
+    <div id="app">
+        {{title1}}
+        <table border="2px">
+            <tr>
+                <td>用户名</td>
+                <td><input type="text" name="" v-model="username"></td>
+            </tr>
+            <tr>
+                <td>密码</td>
+                <td><input type="password" name="" v-model="password"></td>
+            </tr>
+            <tr>
+                <td>确认密码</td>
+                <td><input type="password" name="" v-model="verifypwd"></td>
+            </tr>
+            <tr>
+                <td>性别</td>
+                <td>
+                    男<input type="radio" name="sexy" value="1" v-model="sexy">
+                    女<input type="radio" name="sexy" value="0" v-model="sexy">
+                </td>
+            </tr>
+            <tr>
+                <td>爱好</td>
+                <td>
+                    篮球<input type="checkbox" name="like" value="b-ball" v-model="like">
+                    足球<input type="checkbox" name="like" value="f-ball" v-model="like">
+                    乒乓球<input type="checkbox" name="like" value="pingpong" v-model="like">
+                </td>
+            </tr>
+            <tr>
+                <td>城市</td>
+                <td>
+                    <select v-model="city">
+                        <option>北京</option>
+                        <option>上海</option>
+                        <option>深圳</option>
+                        <option>广州</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>个人简介</td>
+                <td>
+                    <textarea v-model="desc"></textarea>
+                </td>
+            </tr>
+        </table>
+        <button v-on:click="register">注册</button>
+        <hr>
+        {{title2}}
+        <input type="text" v-model="item">
+        <button @click="addTodo">添加</button>
+        <ul>
+            <li v-for="todo in todos">{{todo}}</li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript">
+    var app = new Vue({
+        el: "#app",
+        data: {
+            title1: 'vue绑定表单元素',
+            username: '', // 用户名
+            password: '', // 密码
+            verifypwd: '', // 确认密码
+            sexy: '', // 性别
+            city: '', // 城市
+            like: [], // 爱好（多选框）
+            desc: '', // 个人简介
+            title2: '动态添加列表元素',
+            todos: ["java", "python", "django"],
+            item: ''
+        },
+        methods: {
+            register: function () {
+                alert('触发注册方法~~')
+                // 在函数中如果需要使用data中的变量，需要加 this.
+                alert(this.username + " " + this.password + " " + this.verifypwd + " " + this.sexy + " " + this.city + " " + this.like + " " + this.desc)
+            },
+            addTodo: function () {
+                this.todos.push(this.item)
+                // 清空input框
+                this.item = ''
+            }
+        }
+    })
+
+    // es6箭头函数（写法有点类似lambda）
+    // 无参数写法
+    var say1 = () => {
+        // 方法体
+    }
+    // 调用方法
+    say1()
+
+    // 单参数写法
+    var say2 = arg => {
+        // 方法体
+        alert('此参数为：' + arg)
+    }
+    // 调用方法
+    say2()
+
+    // 多参数，带返回值写法
+    var say3 = (num1, num2) => {
+        return num1 + num2
+    }
+</script>
+
+</html>
